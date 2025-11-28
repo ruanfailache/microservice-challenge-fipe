@@ -1,0 +1,75 @@
+quarkus:
+  application:
+    name: fipe-processor
+  http:
+    port: 8081
+  
+  rest-client:
+    fipe-api:
+      url: https://parallelum.com.br/fipe/api/v1
+      scope: jakarta.inject.Singleton
+      connect-timeout: 10000
+      read-timeout: 30000
+  
+  datasource:
+    db-kind: postgresql
+    username: fipe
+    password: fipe
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/fipe_processor
+  
+  hibernate-orm:
+    database:
+      generation: none
+    log:
+      sql: false
+  
+  liquibase:
+    migrate-at-start: true
+    change-log: db/changelog/db.changelog-master.xml
+  
+  smallrye-openapi:
+    path: /swagger
+  
+  swagger-ui:
+    always-include: true
+    path: /swagger-ui
+  
+  log:
+    level: INFO
+    category:
+      "com.fipe":
+        level: INFO
+    console:
+      enable: true
+      format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
+
+kafka:
+  bootstrap:
+    servers: localhost:9092
+
+mp:
+  messaging:
+    incoming:
+      vehicle-data-in:
+        connector: smallrye-kafka
+        topic: vehicle-data
+        value:
+          deserializer: io.quarkus.kafka.client.serialization.ObjectMapperDeserializer
+          deserializer.type: com.fipe.infrastructure.adapter.in.messaging.VehicleDataMessage
+        key:
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        auto:
+          offset:
+            reset: earliest
+        group:
+          id: fipe-processor-group
+        enable:
+          auto:
+            commit: true
+  
+  jwt:
+    verify:
+      publickey:
+        location: https://localhost:8443/jwt/public-key
+      issuer: https://fipe-issuer
