@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: FIPE Gateway API
+  description: API for managing FIPE vehicle data initial load
+  version: 1.0.0
+  contact:
+    name: FIPE Team
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /api/v1/initial-load:
+    post:
+      tags:
+        - Initial Load
+      summary: Trigger initial load of vehicle data
+      description: Fetches all vehicle brands from FIPE and publishes them for processing
+      operationId: triggerInitialLoad
+      responses:
+        '202':
+          description: Initial load triggered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialLoadResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    InitialLoadResponse:
+      type: object
+      required:
+        - message
+        - brandsProcessed
+        - status
+      properties:
+        message:
+          type: string
+          example: "Initial load triggered successfully"
+        brandsProcessed:
+          type: integer
+          format: int32
+          example: 150
+        status:
+          type: string
+          enum: [PROCESSING]
+          example: "PROCESSING"
+    
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - timestamp
+      properties:
+        message:
+          type: string
+          example: "An error occurred"
+        timestamp:
+          type: string
+          format: date-time
+        details:
+          type: string
