@@ -6,14 +6,20 @@ services:
     container_name: postgres
     environment:
       POSTGRES_USER: fipe
-      POSTGRES_PASSWORD: fipe123
-      POSTGRES_DB: fipe
+      POSTGRES_PASSWORD: fipe
+      POSTGRES_MULTIPLE_DATABASES: fipe_gateway,fipe_processor
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts/create-multiple-databases.sh:/docker-entrypoint-initdb.d/create-multiple-databases.sh
     networks:
       - fipe-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fipe"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -39,6 +45,11 @@ services:
       - kafka_data:/var/lib/kafka/data
     networks:
       - fipe-net
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
   
   redis:
     image: redis:7
@@ -56,17 +67,21 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     container_name: fipe-gateway
     depends_on:
-      - postgres
-      - kafka
-      - redis
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8080:8080"
     environment:
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/fipe
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/fipe_gateway
       QUARKUS_DATASOURCE_USERNAME: fipe
-      QUARKUS_DATASOURCE_PASSWORD: fipe123
+      QUARKUS_DATASOURCE_PASSWORD: fipe
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       QUARKUS_REDIS_HOSTS: redis://redis:6379
+      QUARKUS_REST_CLIENT_FIPE_API_URL: https://parallelum.com.br/fipe/api/v1
     networks:
       - fipe-net
     restart: unless-stopped
@@ -77,15 +92,19 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     container_name: fipe-processor
     depends_on:
-      - postgres
-      - kafka
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     ports:
-      - "8081:8080"
+      - "8081:8081"
     environment:
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/fipe
+      QUARKUS_HTTP_PORT: 8081
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/fipe_processor
       QUARKUS_DATASOURCE_USERNAME: fipe
-      QUARKUS_DATASOURCE_PASSWORD: fipe123
+      QUARKUS_DATASOURCE_PASSWORD: fipe
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      QUARKUS_REST_CLIENT_FIPE_API_URL: https://parallelum.com.br/fipe/api/v1
     networks:
       - fipe-net
     restart: unless-stopped
