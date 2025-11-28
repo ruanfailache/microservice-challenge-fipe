@@ -4,6 +4,7 @@ import com.fipe.domain.exception.InitialLoadException;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.InitialLoadResponse;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -28,6 +29,7 @@ public class InitialLoadController {
     
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
     @Operation(summary = "Trigger initial load", description = "Fetches all vehicle brands from FIPE and publishes them for processing")
     @APIResponse(
             responseCode = "202",
