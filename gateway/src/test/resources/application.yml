@@ -1,0 +1,11 @@
+%test:
+  quarkus:
+    datasource:
+      db-kind: h2
+      jdbc:
+        url: jdbc:h2:mem:test
+    hibernate-orm:
+      database:
+        generation: drop-and-create
+    liquibase:
+      migrate-at-start: false
