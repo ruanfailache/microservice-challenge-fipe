@@ -27,12 +27,24 @@ public class VehicleDataEntity {
     @Column(name = "model", nullable = false, length = 500)
     private String model;
     
+    @Column(name = "observations", columnDefinition = "TEXT")
+    private String observations;
+    
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
     
     public Long getId() {
@@ -75,12 +87,28 @@ public class VehicleDataEntity {
         this.model = model;
     }
     
+    public String getObservations() {
+        return observations;
+    }
+    
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
     
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
     
     @Override

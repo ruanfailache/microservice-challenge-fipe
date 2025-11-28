@@ -9,20 +9,25 @@ public class VehicleData {
     private final String brandCode;
     private final String brandName;
     private final String code;
-    private final String model;
+    private String model;
+    private String observations;
     private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     
-    public VehicleData(Long id, String brandCode, String brandName, String code, String model, LocalDateTime createdAt) {
+    public VehicleData(Long id, String brandCode, String brandName, String code, String model, 
+                       String observations, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.brandCode = Objects.requireNonNull(brandCode, "Brand code cannot be null");
         this.brandName = Objects.requireNonNull(brandName, "Brand name cannot be null");
         this.code = Objects.requireNonNull(code, "Code cannot be null");
         this.model = Objects.requireNonNull(model, "Model cannot be null");
+        this.observations = observations;
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+        this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
     }
     
     public VehicleData(String brandCode, String brandName, String code, String model) {
-        this(null, brandCode, brandName, code, model, LocalDateTime.now());
+        this(null, brandCode, brandName, code, model, null, LocalDateTime.now(), LocalDateTime.now());
     }
     
     public Long getId() {
@@ -49,8 +54,26 @@ public class VehicleData {
         return model;
     }
     
+    public void setModel(String model) {
+        this.model = Objects.requireNonNull(model, "Model cannot be null");
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public String getObservations() {
+        return observations;
+    }
+    
+    public void setObservations(String observations) {
+        this.observations = observations;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
     
     @Override
@@ -75,7 +98,9 @@ public class VehicleData {
                 ", brandName='" + brandName + '\'' +
                 ", code='" + code + '\'' +
                 ", model='" + model + '\'' +
+                ", observations='" + observations + '\'' +
                 ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

@@ -6,5 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <include file="db/changelog/changes/001-create-vehicle-data-table.sql"/>
+    <include file="db/changelog/changes/002-add-observations-column.sql"/>
 
 </databaseChangeLog>

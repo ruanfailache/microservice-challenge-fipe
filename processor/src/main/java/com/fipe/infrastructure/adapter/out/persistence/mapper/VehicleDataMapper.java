@@ -16,7 +16,9 @@ public class VehicleDataMapper {
         entity.setBrandName(vehicleData.getBrandName());
         entity.setCode(vehicleData.getCode());
         entity.setModel(vehicleData.getModel());
+        entity.setObservations(vehicleData.getObservations());
         entity.setCreatedAt(vehicleData.getCreatedAt());
+        entity.setUpdatedAt(vehicleData.getUpdatedAt());
         
         return entity;
     }
@@ -32,7 +34,9 @@ public class VehicleDataMapper {
                 entity.getBrandName(),
                 entity.getCode(),
                 entity.getModel(),
-                entity.getCreatedAt()
+                entity.getObservations(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 }
