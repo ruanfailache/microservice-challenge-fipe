@@ -63,11 +63,21 @@ src/main/java/com/fipe/
 
 ## 📋 Features
 
+### Authentication
+
+- **JWT-based authentication** using RSA keys
+- **Two user roles**: `ADMIN` and `USER`
+- **Protected endpoints** with role-based access control
+- **Demo credentials**:
+  - Admin: `username: admin`, `password: admin`
+  - User: `username: user`, `password: user`
+
 ### Initial Load Process
 
-1. **Gateway receives REST request** to trigger initial load
+1. **Gateway receives REST request** to trigger initial load (requires ADMIN role)
    ```
    POST /api/v1/initial-load
+   Authorization: Bearer <token>
    ```
 
 2. **Gateway fetches all brands** from FIPE API
@@ -88,8 +98,19 @@ src/main/java/com/fipe/
 
 6. **Processor saves data** to PostgreSQL
    - Table: `vehicle_data`
-   - Columns: `id`, `marca_codigo`, `marca_nome`, `codigo`, `modelo`, `created_at`
-   - Unique constraint: (`marca_codigo`, `codigo`)
+   - Columns: `id`, `brand_code`, `brand_name`, `code`, `model`, `observations`, `created_at`, `updated_at`
+   - Unique constraint: (`brand_code`, `code`)
+
+### Query Operations
+
+- **Get all brands** from database (cached with Redis)
+- **Get vehicles by brand** with code, model, and observations (cached with Redis)
+- **Search vehicles** with filtering capabilities
+
+### Update Operations
+
+- **Update vehicle data** including model and observations (requires authentication)
+- **Automatic cache invalidation** on updates
 
 ## 🛠️ Setup & Running
 
@@ -146,9 +167,125 @@ src/main/java/com/fipe/
 - **Swagger UI**: http://localhost:8080/swagger-ui
 - **OpenAPI Spec**: http://localhost:8080/swagger
 
-#### Trigger Initial Load
+#### Authentication
+
+**Login:**
+```http
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+Response 200 OK:
+{
+  "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "username": "admin",
+  "role": "ADMIN",
+  "expiresIn": 86400
+}
+```
+
+#### Brand Operations
+
+**Get all brands:**
+```http
+GET http://localhost:8080/api/v1/brands
+
+Response 200 OK:
+[
+  {
+    "code": "1",
+    "name": "Fiat"
+  },
+  {
+    "code": "2",
+    "name": "Volkswagen"
+  }
+]
+```
+
+**Get brand by code:**
+```http
+GET http://localhost:8080/api/v1/brands/{code}
+
+Response 200 OK:
+{
+  "code": "1",
+  "name": "Fiat"
+}
+```
+
+#### Vehicle Operations
+
+**Get vehicles by brand:**
+```http
+GET http://localhost:8080/api/v1/vehicles/brand/{brandCode}
+
+Response 200 OK:
+[
+  {
+    "id": 1,
+    "brandCode": "1",
+    "brandName": "Fiat",
+    "code": "001",
+    "model": "Palio 1.0",
+    "observations": "Carro em bom estado",
+    "createdAt": "2025-11-27T10:00:00",
+    "updatedAt": "2025-11-27T10:00:00"
+  }
+]
+```
+
+**Get vehicle by ID:**
+```http
+GET http://localhost:8080/api/v1/vehicles/{id}
+
+Response 200 OK:
+{
+  "id": 1,
+  "brandCode": "1",
+  "brandName": "Fiat",
+  "code": "001",
+  "model": "Palio 1.0",
+  "observations": "Carro em bom estado",
+  "createdAt": "2025-11-27T10:00:00",
+  "updatedAt": "2025-11-27T10:00:00"
+}
+```
+
+**Update vehicle (requires authentication):**
+```http
+PUT http://localhost:8080/api/v1/vehicles/{id}
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "model": "Palio 1.0 Fire",
+  "observations": "Carro com ar-condicionado"
+}
+
+Response 200 OK:
+{
+  "id": 1,
+  "brandCode": "1",
+  "brandName": "Fiat",
+  "code": "001",
+  "model": "Palio 1.0 Fire",
+  "observations": "Carro com ar-condicionado",
+  "createdAt": "2025-11-27T10:00:00",
+  "updatedAt": "2025-11-27T11:30:00"
+}
+```
+
+#### Initial Load (requires ADMIN role)
+
+**Trigger initial load:**
 ```http
 POST http://localhost:8080/api/v1/initial-load
+Authorization: Bearer <token>
 Content-Type: application/json
 
 Response 202 Accepted:
@@ -198,22 +335,62 @@ Tests include:
 
 2. **Wait for services to be ready** (30-60 seconds)
 
-3. **Trigger initial load**:
+3. **Login and get token**:
    ```powershell
-   curl -X POST http://localhost:8080/api/v1/initial-load
+   $response = Invoke-RestMethod -Uri "http://localhost:8080/api/v1/auth/login" -Method POST -ContentType "application/json" -Body '{"username":"admin","password":"admin"}'
+   $token = $response.token
    ```
 
-4. **Check processor logs**:
+4. **Trigger initial load** (with authentication):
+   ```powershell
+   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/initial-load" -Method POST -Headers @{Authorization="Bearer $token"}
+   ```
+
+5. **Get all brands** (public endpoint):
+   ```powershell
+   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/brands"
+   ```
+
+6. **Get vehicles by brand** (public endpoint, cached):
+   ```powershell
+   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/vehicles/brand/1"
+   ```
+
+7. **Update a vehicle** (with authentication):
+   ```powershell
+   $updateBody = @{
+       model = "Palio 1.0 Fire"
+       observations = "Carro com ar-condicionado"
+   } | ConvertTo-Json
+   
+   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/vehicles/1" -Method PUT -Headers @{Authorization="Bearer $token"} -ContentType "application/json" -Body $updateBody
+   ```
+
+8. **Check processor logs**:
    ```powershell
    docker-compose logs -f processor
    ```
 
-5. **Verify data in database**:
+9. **Verify data in database**:
    ```powershell
+   # Gateway database
+   docker exec -it postgres psql -U fipe -d fipe_gateway
+   SELECT COUNT(*) FROM vehicle;
+   SELECT * FROM vehicle LIMIT 10;
+   
+   # Processor database
    docker exec -it postgres psql -U fipe -d fipe_processor
    SELECT COUNT(*) FROM vehicle_data;
    SELECT * FROM vehicle_data LIMIT 10;
    ```
+
+10. **Check Redis cache**:
+    ```powershell
+    docker exec -it redis redis-cli
+    KEYS *
+    GET brands:all
+    GET vehicles:brand:1
+    ```
 
 ## 🎯 Design Patterns Used
 
@@ -235,25 +412,56 @@ Tests include:
 
 ## 📊 Database Schema
 
-### vehicle_data Table (Processor)
+### Gateway Database (fipe_gateway)
 
+**brand Table:**
+```sql
+CREATE TABLE brand (
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+```
+
+**vehicle Table:**
+```sql
+CREATE TABLE vehicle (
+    id BIGSERIAL PRIMARY KEY,
+    brand_code VARCHAR(50) NOT NULL,
+    brand_name VARCHAR(255) NOT NULL,
+    code VARCHAR(50) NOT NULL,
+    model VARCHAR(500) NOT NULL,
+    observations TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT uk_vehicle_brand_code UNIQUE (brand_code, code)
+);
+```
+
+### Processor Database (fipe_processor)
+
+**vehicle_data Table:**
 ```sql
 CREATE TABLE vehicle_data (
     id BIGSERIAL PRIMARY KEY,
-    marca_codigo VARCHAR(50) NOT NULL,
-    marca_nome VARCHAR(255) NOT NULL,
-    codigo VARCHAR(50) NOT NULL,
-    modelo VARCHAR(500) NOT NULL,
+    brand_code VARCHAR(50) NOT NULL,
+    brand_name VARCHAR(255) NOT NULL,
+    code VARCHAR(50) NOT NULL,
+    model VARCHAR(500) NOT NULL,
+    observations TEXT,
     created_at TIMESTAMP NOT NULL,
-    CONSTRAINT uk_vehicle_data UNIQUE (marca_codigo, codigo)
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT uk_vehicle_data UNIQUE (brand_code, code)
 );
 ```
 
 ### Indexes
-- Primary key on `id`
-- Unique constraint on (`marca_codigo`, `codigo`)
-- Index on `marca_codigo` for faster queries
-- Index on `created_at` for time-based queries
+- Primary keys on `id` columns
+- Unique constraints on (`brand_code`, `code`)
+- Indexes on `brand_code` for faster brand queries
+- Indexes on `created_at` for time-based queries
+- Index on `brand.code` for faster brand lookups
 
 ## 🔄 Message Flow
 
