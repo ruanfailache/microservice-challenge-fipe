@@ -3,6 +3,7 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.application.service.VehicleQueryService;
 import com.fipe.application.service.VehicleUpdateService;
 import com.fipe.domain.model.Vehicle;
+import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.UpdateVehicleDTO;
 import com.fipe.infrastructure.adapter.in.rest.dto.VehicleDTO;
 import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleDTOMapper;
@@ -113,22 +114,6 @@ public class VehicleController {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ErrorResponse(e.getMessage()))
                     .build();
-        }
-    }
-    
-    private static class ErrorResponse {
-        private String message;
-        
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-        
-        public String getMessage() {
-            return message;
-        }
-        
-        public void setMessage(String message) {
-            this.message = message;
         }
     }
 }

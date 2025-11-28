@@ -1,6 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.application.service.AuthenticationService;
+import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.LoginResponse;
 import jakarta.inject.Inject;
@@ -58,22 +59,6 @@ public class AuthenticationController {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(new ErrorResponse("Invalid credentials"))
                     .build();
-        }
-    }
-    
-    private static class ErrorResponse {
-        private String message;
-        
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-        
-        public String getMessage() {
-            return message;
-        }
-        
-        public void setMessage(String message) {
-            this.message = message;
         }
     }
 }

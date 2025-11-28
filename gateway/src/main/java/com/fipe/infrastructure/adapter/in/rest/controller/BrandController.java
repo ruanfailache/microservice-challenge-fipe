@@ -3,6 +3,7 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.application.service.BrandService;
 import com.fipe.domain.model.Brand;
 import com.fipe.infrastructure.adapter.in.rest.dto.BrandDTO;
+import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.BrandDTOMapper;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
@@ -68,22 +69,6 @@ public class BrandController {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ErrorResponse(e.getMessage()))
                     .build();
-        }
-    }
-    
-    private static class ErrorResponse {
-        private String message;
-        
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-        
-        public String getMessage() {
-            return message;
-        }
-        
-        public void setMessage(String message) {
-            this.message = message;
         }
     }
 }
