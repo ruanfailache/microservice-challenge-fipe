@@ -47,6 +47,10 @@ quarkus:
     console:
       enable: true
       format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
+  
+  security:
+    auth:
+      enabled: true
 
 kafka:
   bootstrap:
@@ -65,6 +69,8 @@ mp:
   
   jwt:
     verify:
-      publickey:
-        location: https://localhost:8443/jwt/public-key
       issuer: https://fipe-issuer
+      publickey:
+        algorithm: RS256
+    sign:
+      key-location: /privateKey.pem
