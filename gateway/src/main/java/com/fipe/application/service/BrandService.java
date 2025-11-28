@@ -1,5 +1,6 @@
 package com.fipe.application.service;
 
+import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.out.cache.VehicleCachePort;
 import com.fipe.domain.port.out.repository.BrandRepositoryPort;
@@ -33,6 +34,6 @@ public class BrandService {
     
     public Brand getBrandByCode(String code) {
         return brandRepositoryPort.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("Brand not found with code: " + code));
+                .orElseThrow(() -> new NotFoundException("Brand", code));
     }
 }

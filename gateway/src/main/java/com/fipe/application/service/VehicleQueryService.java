@@ -1,5 +1,6 @@
 package com.fipe.application.service;
 
+import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Vehicle;
 import com.fipe.domain.port.out.cache.VehicleCachePort;
 import com.fipe.domain.port.out.repository.VehicleRepositoryPort;
@@ -33,6 +34,6 @@ public class VehicleQueryService {
     
     public Vehicle getVehicleById(Long id) {
         return vehicleRepositoryPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Vehicle", String.valueOf(id)));
     }
 }

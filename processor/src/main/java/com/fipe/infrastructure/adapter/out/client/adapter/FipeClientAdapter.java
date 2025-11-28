@@ -1,5 +1,6 @@
 package com.fipe.infrastructure.adapter.out.client.adapter;
 
+import com.fipe.domain.exception.ExternalServiceException;
 import com.fipe.domain.model.Model;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.infrastructure.adapter.out.client.restclient.FipeRestClient;
@@ -42,8 +43,7 @@ public class FipeClientAdapter implements FipeClientPort {
             
         } catch (Exception e) {
             LOG.errorf(e, "Error fetching models for brand: %s from FIPE API", brandCode);
-            // Don't throw exception, return empty list to allow processing to continue
-            return Collections.emptyList();
+            throw new ExternalServiceException("Failed to fetch models for brand: " + brandCode, e);
         }
     }
 }

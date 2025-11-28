@@ -1,6 +1,5 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
-import com.fipe.domain.exception.InitialLoadException;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.InitialLoadResponse;
@@ -42,29 +41,17 @@ public class InitialLoadController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response triggerInitialLoad() {
-        try {
-            LOG.info("Received request to trigger initial load");
-            
-            int brandsProcessed = initialLoadUseCase.executeInitialLoad();
-            
-            InitialLoadResponse response = new InitialLoadResponse(
-                    "Initial load triggered successfully",
-                    brandsProcessed,
-                    "PROCESSING"
-            );
-            
-            LOG.infof("Initial load triggered successfully. Brands processed: %d", brandsProcessed);
-            return Response.status(Response.Status.ACCEPTED).entity(response).build();
-            
-        } catch (InitialLoadException e) {
-            LOG.error("Error triggering initial load", e);
-            ErrorResponse errorResponse = new ErrorResponse(
-                    "Failed to trigger initial load",
-                    e.getMessage()
-            );
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(errorResponse)
-                    .build();
-        }
+        LOG.info("Received request to trigger initial load");
+        
+        int brandsProcessed = initialLoadUseCase.executeInitialLoad();
+        
+        InitialLoadResponse response = new InitialLoadResponse(
+                "Initial load triggered successfully",
+                brandsProcessed,
+                "PROCESSING"
+        );
+        
+        LOG.infof("Initial load triggered successfully. Brands processed: %d", brandsProcessed);
+        return Response.status(Response.Status.ACCEPTED).entity(response).build();
     }
 }

@@ -17,21 +17,14 @@ public class VehicleDataConsumer {
     
     @Incoming("vehicle-data-in")
     public void consume(VehicleDataMessage message) {
-        try {
-            LOG.infof("Received message to process vehicle data for brand: %s - %s", 
-                    message.getBrandCode(), message.getBrandName());
-            
-            processVehicleDataUseCase.processVehicleData(
-                    message.getBrandCode(),
-                    message.getBrandName()
-            );
-            
-            LOG.infof("Successfully processed vehicle data for brand: %s", message.getBrandCode());
-            
-        } catch (Exception e) {
-            LOG.errorf(e, "Error processing vehicle data for brand: %s", message.getBrandCode());
-            // In a production system, you might want to implement a dead letter queue or retry mechanism
-            throw e;
-        }
+        LOG.infof("Received message to process vehicle data for brand: %s - %s", 
+                message.getBrandCode(), message.getBrandName());
+        
+        processVehicleDataUseCase.processVehicleData(
+                message.getBrandCode(),
+                message.getBrandName()
+        );
+        
+        LOG.infof("Successfully processed vehicle data for brand: %s", message.getBrandCode());
     }
 }

@@ -1,5 +1,6 @@
 package com.fipe.application.service;
 
+import com.fipe.domain.exception.AuthenticationException;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -26,7 +27,7 @@ public class AuthenticationService {
         String role = validateCredentials(username, password);
         
         if (role == null) {
-            throw new RuntimeException("Invalid credentials");
+            throw new AuthenticationException("Invalid credentials");
         }
         
         return generateToken(username, role);

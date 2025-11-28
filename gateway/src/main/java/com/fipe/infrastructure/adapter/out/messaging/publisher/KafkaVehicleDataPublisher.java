@@ -1,5 +1,6 @@
 package com.fipe.infrastructure.adapter.out.messaging.publisher;
 
+import com.fipe.domain.exception.MessagingException;
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.out.publisher.VehicleDataPublisherPort;
 import com.fipe.infrastructure.adapter.out.messaging.message.VehicleDataMessage;
@@ -37,7 +38,7 @@ public class KafkaVehicleDataPublisher implements VehicleDataPublisherPort {
             
         } catch (Exception e) {
             LOG.errorf(e, "Error publishing brand for processing: %s", brand.getCode());
-            throw new RuntimeException("Failed to publish brand for processing", e);
+            throw new MessagingException("Failed to publish brand for processing", e);
         }
     }
 }

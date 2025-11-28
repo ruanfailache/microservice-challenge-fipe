@@ -55,7 +55,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             LOG.info("Cache miss for all brands");
             return Optional.empty();
         } catch (Exception e) {
-            LOG.warnf("Error reading brands from cache: %s", e.getMessage());
+            LOG.warnf("Error reading brands from cache: %s. Continuing without cache.", e.getMessage());
             return Optional.empty();
         }
     }
@@ -67,7 +67,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             getValueCommands().setex(BRANDS_CACHE_KEY, CACHE_TTL.getSeconds(), json);
             LOG.infof("Cached %d brands", brands.size());
         } catch (Exception e) {
-            LOG.warnf("Error caching brands: %s", e.getMessage());
+            LOG.warnf("Error caching brands: %s. Continuing without cache.", e.getMessage());
         }
     }
     
@@ -84,7 +84,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             LOG.infof("Cache miss for vehicles of brand: %s", brandCode);
             return Optional.empty();
         } catch (Exception e) {
-            LOG.warnf("Error reading vehicles from cache for brand %s: %s", brandCode, e.getMessage());
+            LOG.warnf("Error reading vehicles from cache for brand %s: %s. Continuing without cache.", brandCode, e.getMessage());
             return Optional.empty();
         }
     }
@@ -97,7 +97,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             getValueCommands().setex(key, CACHE_TTL.getSeconds(), json);
             LOG.infof("Cached %d vehicles for brand: %s", vehicles.size(), brandCode);
         } catch (Exception e) {
-            LOG.warnf("Error caching vehicles for brand %s: %s", brandCode, e.getMessage());
+            LOG.warnf("Error caching vehicles for brand %s: %s. Continuing without cache.", brandCode, e.getMessage());
         }
     }
     
@@ -108,7 +108,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             getValueCommands().getdel(key);
             LOG.infof("Invalidated cache for brand: %s", brandCode);
         } catch (Exception e) {
-            LOG.warnf("Error invalidating cache for brand %s: %s", brandCode, e.getMessage());
+            LOG.warnf("Error invalidating cache for brand %s: %s. Continuing without cache.", brandCode, e.getMessage());
         }
     }
     
@@ -118,7 +118,7 @@ public class RedisCacheAdapter implements VehicleCachePort {
             getValueCommands().getdel(BRANDS_CACHE_KEY);
             LOG.info("Invalidated all brands cache");
         } catch (Exception e) {
-            LOG.warnf("Error invalidating all caches: %s", e.getMessage());
+            LOG.warnf("Error invalidating all caches: %s. Continuing without cache.", e.getMessage());
         }
     }
 }

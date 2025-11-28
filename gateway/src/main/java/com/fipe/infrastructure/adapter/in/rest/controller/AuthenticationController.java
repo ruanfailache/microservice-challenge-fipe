@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.application.service.AuthenticationService;
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.LoginResponse;
 import jakarta.inject.Inject;
@@ -38,27 +37,21 @@ public class AuthenticationController {
             @APIResponse(responseCode = "500", description = "Internal server error")
     })
     public Response login(LoginRequest request) {
-        try {
-            String token = authenticationService.authenticate(
-                    request.getUsername(), 
-                    request.getPassword()
-            );
-            
-            // Determine role based on username (demo logic)
-            String role = "admin".equals(request.getUsername()) ? "ADMIN" : "USER";
-            
-            LoginResponse response = new LoginResponse(
-                    token,
-                    request.getUsername(),
-                    role,
-                    86400 // 24 hours in seconds
-            );
-            
-            return Response.ok(response).build();
-        } catch (RuntimeException e) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(new ErrorResponse("Invalid credentials"))
-                    .build();
-        }
+        String token = authenticationService.authenticate(
+                request.getUsername(), 
+                request.getPassword()
+        );
+        
+        // Determine role based on username (demo logic)
+        String role = "admin".equals(request.getUsername()) ? "ADMIN" : "USER";
+        
+        LoginResponse response = new LoginResponse(
+                token,
+                request.getUsername(),
+                role,
+                86400 // 24 hours in seconds
+        );
+        
+        return Response.ok(response).build();
     }
 }

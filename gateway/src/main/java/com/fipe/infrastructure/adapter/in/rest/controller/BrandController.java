@@ -3,7 +3,6 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.application.service.BrandService;
 import com.fipe.domain.model.Brand;
 import com.fipe.infrastructure.adapter.in.rest.dto.BrandDTO;
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.BrandDTOMapper;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
@@ -61,14 +60,8 @@ public class BrandController {
             @APIResponse(responseCode = "500", description = "Internal server error")
     })
     public Response getBrandByCode(@PathParam("code") String code) {
-        try {
-            Brand brand = brandService.getBrandByCode(code);
-            BrandDTO dto = BrandDTOMapper.toDTO(brand);
-            return Response.ok(dto).build();
-        } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new ErrorResponse(e.getMessage()))
-                    .build();
-        }
+        Brand brand = brandService.getBrandByCode(code);
+        BrandDTO dto = BrandDTOMapper.toDTO(brand);
+        return Response.ok(dto).build();
     }
 }

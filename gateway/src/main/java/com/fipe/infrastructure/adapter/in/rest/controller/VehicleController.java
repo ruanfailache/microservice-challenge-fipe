@@ -3,7 +3,6 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.application.service.VehicleQueryService;
 import com.fipe.application.service.VehicleUpdateService;
 import com.fipe.domain.model.Vehicle;
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.UpdateVehicleDTO;
 import com.fipe.infrastructure.adapter.in.rest.dto.VehicleDTO;
 import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleDTOMapper;
@@ -73,15 +72,9 @@ public class VehicleController {
     public Response getVehicleById(
             @Parameter(description = "Vehicle ID", required = true)
             @PathParam("id") Long id) {
-        try {
-            Vehicle vehicle = vehicleQueryService.getVehicleById(id);
-            VehicleDTO dto = VehicleDTOMapper.toDTO(vehicle);
-            return Response.ok(dto).build();
-        } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new ErrorResponse(e.getMessage()))
-                    .build();
-        }
+        Vehicle vehicle = vehicleQueryService.getVehicleById(id);
+        VehicleDTO dto = VehicleDTOMapper.toDTO(vehicle);
+        return Response.ok(dto).build();
     }
     
     @PUT
@@ -102,18 +95,12 @@ public class VehicleController {
             @Parameter(description = "Vehicle ID", required = true)
             @PathParam("id") Long id,
             UpdateVehicleDTO updateDTO) {
-        try {
-            Vehicle updated = vehicleUpdateService.updateVehicle(
-                    id, 
-                    updateDTO.getModel(), 
-                    updateDTO.getObservations()
-            );
-            VehicleDTO dto = VehicleDTOMapper.toDTO(updated);
-            return Response.ok(dto).build();
-        } catch (RuntimeException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new ErrorResponse(e.getMessage()))
-                    .build();
-        }
+        Vehicle updated = vehicleUpdateService.updateVehicle(
+                id, 
+                updateDTO.getModel(), 
+                updateDTO.getObservations()
+        );
+        VehicleDTO dto = VehicleDTOMapper.toDTO(updated);
+        return Response.ok(dto).build();
     }
 }

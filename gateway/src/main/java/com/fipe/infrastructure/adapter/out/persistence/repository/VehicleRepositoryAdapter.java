@@ -33,12 +33,8 @@ public class VehicleRepositoryAdapter implements VehicleRepositoryPort {
     
     @Override
     public Optional<Vehicle> findById(Long id) {
-        try {
-            VehicleEntity entity = entityManager.find(VehicleEntity.class, id);
-            return entity != null ? Optional.of(VehicleMapper.toDomain(entity)) : Optional.empty();
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        VehicleEntity entity = entityManager.find(VehicleEntity.class, id);
+        return entity != null ? Optional.of(VehicleMapper.toDomain(entity)) : Optional.empty();
     }
     
     @Override
