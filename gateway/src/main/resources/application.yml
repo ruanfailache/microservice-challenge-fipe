@@ -45,12 +45,7 @@ quarkus:
       "com.fipe":
         level: INFO
     console:
-      enable: true
       format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
-  
-  security:
-    auth:
-      enabled: true
 
 kafka:
   bootstrap:

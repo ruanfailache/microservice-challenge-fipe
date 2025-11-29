@@ -28,9 +28,9 @@ public class ProcessVehicleDataUseCaseImpl implements ProcessVehicleDataUseCase 
     public void processVehicleData(String brandCode, String brandName) {
         LOG.infof("Starting to process vehicle data for brand: %s - %s", brandCode, brandName);
         
-        // Fetch all models for the brand from external API (throws ExternalServiceException on failure)
+        // Fetch all models for the brand from external API
         List<Model> models = fipeClientPort.fetchModelsByBrand(brandCode);
-        
+    
         if (models.isEmpty()) {
             LOG.warnf("No models found for brand: %s", brandCode);
             return;

@@ -27,9 +27,9 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     public int executeInitialLoad() {
         LOG.info("Starting initial load process");
         
-        // Fetch all brands from external API (throws ExternalServiceException on failure)
+        // Fetch all brands from external API
         List<Brand> brands = fipeClientPort.fetchAllBrands();
-        
+    
         if (brands.isEmpty()) {
             LOG.warn("No brands found to process");
             return 0;

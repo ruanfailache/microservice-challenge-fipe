@@ -7,13 +7,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
 
 @ApplicationScoped
-public interface VehicleDataRepository extends PanacheRepository<VehicleDataEntity> {
+public class VehicleDataRepository implements PanacheRepository<VehicleDataEntity> {
     
-    default boolean existsByBrandCodeAndCode(String brandCode, String code) {
+    public boolean existsByBrandCodeAndCode(String brandCode, String code) {
         return count("brandCode = ?1 and code = ?2", brandCode, code) > 0;
     }
     
-    default Optional<VehicleDataEntity> findByBrandCodeAndCode(String brandCode, String code) {
+    public Optional<VehicleDataEntity> findByBrandCodeAndCode(String brandCode, String code) {
         return find("brandCode = ?1 and code = ?2", brandCode, code).firstResultOptional();
     }
 }

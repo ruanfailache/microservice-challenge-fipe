@@ -7,9 +7,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
 
 @ApplicationScoped
-public interface BrandRepository extends PanacheRepository<BrandEntity> {
+public class BrandRepository implements PanacheRepository<BrandEntity> {
     
-    default Optional<BrandEntity> findByCode(String code) {
+    public Optional<BrandEntity> findByCode(String code) {
         return find("code", code).firstResultOptional();
     }
 }

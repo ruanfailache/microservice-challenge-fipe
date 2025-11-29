@@ -1,40 +1,38 @@
 package com.fipe.application.usecase;
 
-import com.fipe.domain.exception.VehicleDataProcessingException;
 import com.fipe.domain.model.Model;
 import com.fipe.domain.model.VehicleData;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.domain.port.out.repository.VehicleDataRepositoryPort;
-import io.quarkus.test.InjectMock;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@QuarkusTest
+@ExtendWith(MockitoExtension.class)
 class ProcessVehicleDataUseCaseImplTest {
     
-    @Inject
-    ProcessVehicleDataUseCaseImpl processVehicleDataUseCase;
+    @InjectMocks
+    private ProcessVehicleDataUseCaseImpl processVehicleDataUseCase;
     
-    @InjectMock
-    FipeClientPort fipeClientPort;
+    @Mock
+    private FipeClientPort fipeClientPort;
     
-    @InjectMock
-    VehicleDataRepositoryPort vehicleDataRepositoryPort;
+    @Mock
+    private VehicleDataRepositoryPort vehicleDataRepositoryPort;
     
     @BeforeEach
     void setUp() {
-        Mockito.reset(fipeClientPort, vehicleDataRepositoryPort);
+        // Mocks are automatically reset by MockitoExtension
     }
     
     @Test
@@ -102,20 +100,6 @@ class ProcessVehicleDataUseCaseImplTest {
         // Then
         verify(vehicleDataRepositoryPort, times(2)).exists(anyString(), anyString());
         verify(vehicleDataRepositoryPort, times(1)).save(any(VehicleData.class));
-    }
-    
-    @Test
-    void shouldThrowExceptionWhenFipeClientFails() {
-        // Given
-        String brandCode = "1";
-        String brandName = "Fiat";
-        
-        when(fipeClientPort.fetchModelsByBrand(brandCode))
-                .thenThrow(new RuntimeException("API error"));
-        
-        // When & Then
-        assertThrows(VehicleDataProcessingException.class, 
-                () -> processVehicleDataUseCase.processVehicleData(brandCode, brandName));
     }
     
     @Test

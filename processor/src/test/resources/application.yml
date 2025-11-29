@@ -1,4 +1,4 @@
-%test:
+"%test":
   quarkus:
     datasource:
       db-kind: h2
@@ -9,9 +9,10 @@
         generation: drop-and-create
     liquibase:
       migrate-at-start: false
-
-mp:
-  messaging:
-    incoming:
-      vehicle-data-in:
-        enabled: false
+    log:
+      level: INFO
+  mp:
+    messaging:
+      incoming:
+        vehicle-data-in:
+          enabled: false

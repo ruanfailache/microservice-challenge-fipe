@@ -7,13 +7,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped
-public interface VehicleRepository extends PanacheRepository<VehicleEntity> {
+public class VehicleRepository implements PanacheRepository<VehicleEntity> {
     
-    default List<VehicleEntity> findByBrandCode(String brandCode) {
+    public List<VehicleEntity> findByBrandCode(String brandCode) {
         return list("brandCode = ?1 order by model", brandCode);
     }
     
-    default boolean existsByBrandCodeAndCode(String brandCode, String code) {
+    public boolean existsByBrandCodeAndCode(String brandCode, String code) {
         return count("brandCode = ?1 and code = ?2", brandCode, code) > 0;
     }
 }

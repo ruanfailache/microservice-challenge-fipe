@@ -1,4 +1,4 @@
-%test:
+"%test":
   quarkus:
     datasource:
       db-kind: h2
@@ -9,3 +9,14 @@
         generation: drop-and-create
     liquibase:
       migrate-at-start: false
+    log:
+      level: INFO
+    redis:
+      devservices:
+        enabled: false
+    kafka:
+      devservices:
+        enabled: false
+  kafka:
+    bootstrap:
+      servers: localhost:19092

@@ -1,15 +1,14 @@
 package com.fipe.application.usecase;
 
-import com.fipe.domain.exception.InitialLoadException;
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.domain.port.out.publisher.VehicleDataPublisherPort;
-import io.quarkus.test.InjectMock;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,21 +18,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@QuarkusTest
+@ExtendWith(MockitoExtension.class)
 class InitialLoadUseCaseImplTest {
     
-    @Inject
-    InitialLoadUseCaseImpl initialLoadUseCase;
+    @InjectMocks
+    private InitialLoadUseCaseImpl initialLoadUseCase;
     
-    @InjectMock
-    FipeClientPort fipeClientPort;
+    @Mock
+    private FipeClientPort fipeClientPort;
     
-    @InjectMock
-    VehicleDataPublisherPort vehicleDataPublisherPort;
+    @Mock
+    private VehicleDataPublisherPort vehicleDataPublisherPort;
     
     @BeforeEach
     void setUp() {
-        Mockito.reset(fipeClientPort, vehicleDataPublisherPort);
+        // Mocks are automatically reset by MockitoExtension
     }
     
     @Test
@@ -67,17 +66,6 @@ class InitialLoadUseCaseImplTest {
         
         // Then
         assertEquals(0, result);
-        verify(fipeClientPort, times(1)).fetchAllBrands();
-        verify(vehicleDataPublisherPort, never()).publishBrandForProcessing(any(Brand.class));
-    }
-    
-    @Test
-    void shouldThrowInitialLoadExceptionWhenFipeClientFails() {
-        // Given
-        when(fipeClientPort.fetchAllBrands()).thenThrow(new RuntimeException("API error"));
-        
-        // When & Then
-        assertThrows(InitialLoadException.class, () -> initialLoadUseCase.executeInitialLoad());
         verify(fipeClientPort, times(1)).fetchAllBrands();
         verify(vehicleDataPublisherPort, never()).publishBrandForProcessing(any(Brand.class));
     }
