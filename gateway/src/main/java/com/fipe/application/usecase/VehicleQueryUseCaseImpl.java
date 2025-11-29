@@ -1,7 +1,8 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Vehicle;
+import com.fipe.domain.port.in.usecase.VehicleQueryUseCase;
 import com.fipe.domain.port.out.cache.VehicleCachePort;
 import com.fipe.domain.port.out.repository.VehicleRepositoryPort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,9 +12,9 @@ import org.jboss.logging.Logger;
 import java.util.List;
 
 @ApplicationScoped
-public class VehicleQueryService {
+public class VehicleQueryUseCaseImpl implements VehicleQueryUseCase {
     
-    private static final Logger LOG = Logger.getLogger(VehicleQueryService.class);
+    private static final Logger LOG = Logger.getLogger(VehicleQueryUseCaseImpl.class);
     
     @Inject
     VehicleRepositoryPort vehicleRepositoryPort;

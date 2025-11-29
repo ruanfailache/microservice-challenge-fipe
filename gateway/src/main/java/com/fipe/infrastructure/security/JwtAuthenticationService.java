@@ -1,4 +1,4 @@
-package com.fipe.application.service;
+package com.fipe.infrastructure.security;
 
 import com.fipe.domain.exception.AuthenticationException;
 import io.smallrye.jwt.build.Jwt;
@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 @ApplicationScoped
-public class AuthenticationService {
+public class JwtAuthenticationService {
     
-    private static final Logger LOG = Logger.getLogger(AuthenticationService.class);
+    private static final Logger LOG = Logger.getLogger(JwtAuthenticationService.class);
     private static final Duration TOKEN_DURATION = Duration.ofHours(24);
     
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue = "https://fipe-issuer")

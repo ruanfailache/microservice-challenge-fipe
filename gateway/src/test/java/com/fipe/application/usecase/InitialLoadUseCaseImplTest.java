@@ -1,4 +1,4 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.exception.InitialLoadException;
 import com.fipe.domain.model.Brand;
@@ -20,10 +20,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
-class InitialLoadServiceTest {
+class InitialLoadUseCaseImplTest {
     
     @Inject
-    InitialLoadService initialLoadService;
+    InitialLoadUseCaseImpl initialLoadUseCase;
     
     @InjectMock
     FipeClientPort fipeClientPort;
@@ -49,7 +49,7 @@ class InitialLoadServiceTest {
         doNothing().when(vehicleDataPublisherPort).publishBrandForProcessing(any(Brand.class));
         
         // When
-        int result = initialLoadService.executeInitialLoad();
+        int result = initialLoadUseCase.executeInitialLoad();
         
         // Then
         assertEquals(3, result);
@@ -63,7 +63,7 @@ class InitialLoadServiceTest {
         when(fipeClientPort.fetchAllBrands()).thenReturn(Collections.emptyList());
         
         // When
-        int result = initialLoadService.executeInitialLoad();
+        int result = initialLoadUseCase.executeInitialLoad();
         
         // Then
         assertEquals(0, result);
@@ -77,7 +77,7 @@ class InitialLoadServiceTest {
         when(fipeClientPort.fetchAllBrands()).thenThrow(new RuntimeException("API error"));
         
         // When & Then
-        assertThrows(InitialLoadException.class, () -> initialLoadService.executeInitialLoad());
+        assertThrows(InitialLoadException.class, () -> initialLoadUseCase.executeInitialLoad());
         verify(fipeClientPort, times(1)).fetchAllBrands();
         verify(vehicleDataPublisherPort, never()).publishBrandForProcessing(any(Brand.class));
     }
@@ -98,7 +98,7 @@ class InitialLoadServiceTest {
                 .when(vehicleDataPublisherPort).publishBrandForProcessing(any(Brand.class));
         
         // When
-        int result = initialLoadService.executeInitialLoad();
+        int result = initialLoadUseCase.executeInitialLoad();
         
         // Then
         assertEquals(2, result); // 2 out of 3 should succeed

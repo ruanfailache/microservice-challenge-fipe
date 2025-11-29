@@ -1,7 +1,8 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Brand;
+import com.fipe.domain.port.in.usecase.BrandQueryUseCase;
 import com.fipe.domain.port.out.cache.VehicleCachePort;
 import com.fipe.domain.port.out.repository.BrandRepositoryPort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,9 +12,9 @@ import org.jboss.logging.Logger;
 import java.util.List;
 
 @ApplicationScoped
-public class BrandService {
+public class BrandQueryUseCaseImpl implements BrandQueryUseCase {
     
-    private static final Logger LOG = Logger.getLogger(BrandService.class);
+    private static final Logger LOG = Logger.getLogger(BrandQueryUseCaseImpl.class);
     
     @Inject
     BrandRepositoryPort brandRepositoryPort;

@@ -1,4 +1,4 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
@@ -12,9 +12,9 @@ import org.jboss.logging.Logger;
 import java.util.List;
 
 @ApplicationScoped
-public class InitialLoadService implements InitialLoadUseCase {
+public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     
-    private static final Logger LOG = Logger.getLogger(InitialLoadService.class);
+    private static final Logger LOG = Logger.getLogger(InitialLoadUseCaseImpl.class);
     
     @Inject
     FipeClientPort fipeClientPort;

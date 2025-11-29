@@ -1,4 +1,4 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.model.Model;
 import com.fipe.domain.model.VehicleData;
@@ -13,9 +13,9 @@ import org.jboss.logging.Logger;
 import java.util.List;
 
 @ApplicationScoped
-public class ProcessVehicleDataService implements ProcessVehicleDataUseCase {
+public class ProcessVehicleDataUseCaseImpl implements ProcessVehicleDataUseCase {
     
-    private static final Logger LOG = Logger.getLogger(ProcessVehicleDataService.class);
+    private static final Logger LOG = Logger.getLogger(ProcessVehicleDataUseCaseImpl.class);
     
     @Inject
     FipeClientPort fipeClientPort;

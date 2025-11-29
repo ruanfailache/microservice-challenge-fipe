@@ -1,4 +1,4 @@
-package com.fipe.application.service;
+package com.fipe.application.usecase;
 
 import com.fipe.domain.exception.VehicleDataProcessingException;
 import com.fipe.domain.model.Model;
@@ -21,10 +21,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
-class ProcessVehicleDataServiceTest {
+class ProcessVehicleDataUseCaseImplTest {
     
     @Inject
-    ProcessVehicleDataService processVehicleDataService;
+    ProcessVehicleDataUseCaseImpl processVehicleDataUseCase;
     
     @InjectMock
     FipeClientPort fipeClientPort;
@@ -55,7 +55,7 @@ class ProcessVehicleDataServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
         
         // When
-        processVehicleDataService.processVehicleData(brandCode, brandName);
+        processVehicleDataUseCase.processVehicleData(brandCode, brandName);
         
         // Then
         verify(fipeClientPort, times(1)).fetchModelsByBrand(brandCode);
@@ -72,7 +72,7 @@ class ProcessVehicleDataServiceTest {
         when(fipeClientPort.fetchModelsByBrand(brandCode)).thenReturn(Collections.emptyList());
         
         // When
-        processVehicleDataService.processVehicleData(brandCode, brandName);
+        processVehicleDataUseCase.processVehicleData(brandCode, brandName);
         
         // Then
         verify(fipeClientPort, times(1)).fetchModelsByBrand(brandCode);
@@ -97,7 +97,7 @@ class ProcessVehicleDataServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
         
         // When
-        processVehicleDataService.processVehicleData(brandCode, brandName);
+        processVehicleDataUseCase.processVehicleData(brandCode, brandName);
         
         // Then
         verify(vehicleDataRepositoryPort, times(2)).exists(anyString(), anyString());
@@ -115,7 +115,7 @@ class ProcessVehicleDataServiceTest {
         
         // When & Then
         assertThrows(VehicleDataProcessingException.class, 
-                () -> processVehicleDataService.processVehicleData(brandCode, brandName));
+                () -> processVehicleDataUseCase.processVehicleData(brandCode, brandName));
     }
     
     @Test
@@ -138,7 +138,7 @@ class ProcessVehicleDataServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
         
         // When
-        processVehicleDataService.processVehicleData(brandCode, brandName);
+        processVehicleDataUseCase.processVehicleData(brandCode, brandName);
         
         // Then
         verify(vehicleDataRepositoryPort, times(3)).save(any(VehicleData.class));

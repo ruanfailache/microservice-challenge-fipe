@@ -1,9 +1,9 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
-import com.fipe.application.service.AuthenticationService;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
+import com.fipe.infrastructure.security.JwtAuthenticationService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -18,13 +18,13 @@ import jakarta.ws.rs.core.Response;
 public class AuthenticationController implements AuthenticationApi {
     
     @Inject
-    AuthenticationService authenticationService;
+    JwtAuthenticationService jwtAuthenticationService;
     
     @POST
     @Path("/login")
     @Override
     public Response login(LoginRequest request) {
-        String token = authenticationService.authenticate(
+        String token = jwtAuthenticationService.authenticate(
                 request.getUsername(), 
                 request.getPassword()
         );
