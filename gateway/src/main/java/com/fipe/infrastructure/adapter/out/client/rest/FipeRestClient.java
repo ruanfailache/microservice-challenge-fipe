@@ -1,6 +1,6 @@
 package com.fipe.infrastructure.adapter.out.client.rest;
 
-import com.fipe.infrastructure.adapter.out.client.response.FipeBrandResponse;
+import com.fipe.infrastructure.adapter.out.rest.response.FipeBrandResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

@@ -4,7 +4,7 @@ import com.fipe.domain.exception.ExternalServiceException;
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.infrastructure.adapter.out.client.rest.FipeRestClient;
-import com.fipe.infrastructure.adapter.out.client.response.FipeBrandResponse;
+import com.fipe.infrastructure.adapter.out.rest.response.FipeBrandResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;

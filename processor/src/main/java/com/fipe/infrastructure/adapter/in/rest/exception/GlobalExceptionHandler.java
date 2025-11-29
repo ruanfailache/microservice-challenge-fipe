@@ -17,16 +17,16 @@ public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
     public Response toResponse(Exception exception) {
         LOG.error("Exception caught by global handler", exception);
         
-        if (exception instanceof ResourceNotFoundException) {
-            return handleResourceNotFoundException((ResourceNotFoundException) exception);
+        if (exception instanceof ResourceNotFoundException foundException) {
+            return handleResourceNotFoundException(foundException);
         }
         
-        if (exception instanceof VehicleDataProcessingException) {
-            return handleVehicleDataProcessingException((VehicleDataProcessingException) exception);
+        if (exception instanceof VehicleDataProcessingException processingException) {
+            return handleVehicleDataProcessingException(processingException);
         }
         
-        if (exception instanceof IllegalArgumentException) {
-            return handleIllegalArgumentException((IllegalArgumentException) exception);
+        if (exception instanceof IllegalArgumentException argumentException) {
+            return handleIllegalArgumentException(argumentException);
         }
         
         return handleGenericException(exception);

@@ -22,7 +22,7 @@ public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
     public void execute(Long id) {
         LOG.infof("Deleting user: %d", id);
         
-        if (!userRepository.findById(id).isPresent()) {
+        if (userRepository.findById(id).isEmpty()) {
             throw new NotFoundException("User not found: " + id);
         }
         

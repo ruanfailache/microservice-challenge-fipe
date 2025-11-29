@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.out.client.rest;
 
-import com.fipe.infrastructure.adapter.out.client.request.UserAuthenticationRequest;
-import com.fipe.infrastructure.adapter.out.client.response.UserServiceResponse;
+import com.fipe.infrastructure.adapter.out.rest.request.UserAuthenticationRequest;
+import com.fipe.infrastructure.adapter.out.rest.response.UserServiceResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;

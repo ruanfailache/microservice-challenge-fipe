@@ -21,16 +21,16 @@ public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
     public Response toResponse(Exception exception) {
         LOG.error("Exception caught", exception);
         
-        if (exception instanceof NotFoundException) {
-            return handleNotFoundException((NotFoundException) exception);
+        if (exception instanceof NotFoundException foundException) {
+            return handleNotFoundException(foundException);
         }
         
-        if (exception instanceof ValidationException) {
-            return handleValidationException((ValidationException) exception);
+        if (exception instanceof ValidationException validationException) {
+            return handleValidationException(validationException);
         }
         
-        if (exception instanceof AuthenticationException) {
-            return handleAuthenticationException((AuthenticationException) exception);
+        if (exception instanceof AuthenticationException authenticationException) {
+            return handleAuthenticationException(authenticationException);
         }
         
         return handleGenericException(exception);
