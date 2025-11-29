@@ -24,18 +24,15 @@ public class AuthenticationController implements AuthenticationApi {
     @Path("/login")
     @Override
     public Response login(LoginRequest request) {
-        String token = jwtAuthenticationService.authenticate(
+        var authResult = jwtAuthenticationService.authenticate(
                 request.getUsername(), 
                 request.getPassword()
         );
         
-        // Determine role based on username (demo logic)
-        String role = "admin".equals(request.getUsername()) ? "ADMIN" : "USER";
-        
         LoginResponse response = new LoginResponse(
-                token,
+                authResult.token(),
                 request.getUsername(),
-                role,
+                authResult.role(),
                 86400 // 24 hours in seconds
         );
         

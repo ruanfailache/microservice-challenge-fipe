@@ -10,6 +10,11 @@ quarkus:
       scope: jakarta.inject.Singleton
       connect-timeout: 10000
       read-timeout: 30000
+    user-service:
+      url: http://localhost:8081
+      scope: jakarta.inject.Singleton
+      connect-timeout: 5000
+      read-timeout: 10000
   
   datasource:
     db-kind: postgresql

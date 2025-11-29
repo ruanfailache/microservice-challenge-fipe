@@ -1,0 +1,46 @@
+quarkus:
+  application:
+    name: fipe-user-service
+  http:
+    port: 8081
+  
+  datasource:
+    db-kind: postgresql
+    username: fipe
+    password: fipe
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/fipe_user
+  
+  hibernate-orm:
+    database:
+      generation: none
+    log:
+      sql: false
+  
+  liquibase:
+    migrate-at-start: true
+    change-log: db/changelog/db.changelog-master.xml
+  
+  smallrye-openapi:
+    path: /swagger
+  
+  swagger-ui:
+    always-include: true
+    path: /swagger-ui
+  
+  log:
+    level: INFO
+    category:
+      "com.fipe":
+        level: INFO
+    console:
+      format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
+
+mp:
+  jwt:
+    verify:
+      issuer: https://fipe-issuer
+      publickey:
+        algorithm: RS256
+    sign:
+      key-location: /privateKey.pem
