@@ -1,6 +1,3 @@
---liquibase formatted sql
-
---changeset fipe-team:001-create-vehicle-data-table
 CREATE TABLE vehicle_data (
     id BIGSERIAL PRIMARY KEY,
     brand_code VARCHAR(50) NOT NULL,

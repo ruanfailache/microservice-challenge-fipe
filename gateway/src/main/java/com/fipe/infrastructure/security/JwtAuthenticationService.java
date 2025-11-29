@@ -1,14 +1,19 @@
 package com.fipe.infrastructure.security;
 
+import com.fipe.domain.enums.Role;
 import com.fipe.domain.exception.AuthenticationException;
+import com.fipe.domain.model.User;
+import com.fipe.domain.port.out.UserRepositoryPort;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @ApplicationScoped
 public class JwtAuthenticationService {
@@ -19,34 +24,39 @@ public class JwtAuthenticationService {
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue = "https://fipe-issuer")
     String issuer;
     
+    @Inject
+    UserRepositoryPort userRepository;
+    
+    @Inject
+    PasswordEncoder passwordEncoder;
+    
+    @Transactional
     public String authenticate(String username, String password) {
         LOG.infof("Authenticating user: %s", username);
         
-        // In production, validate against database
-        // For demo purposes, we accept admin/admin and user/user
-        String role = validateCredentials(username, password);
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new AuthenticationException("Invalid credentials"));
         
-        if (role == null) {
+        if (!user.isActive()) {
+            throw new AuthenticationException("User account is inactive");
+        }
+        
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new AuthenticationException("Invalid credentials");
         }
         
-        return generateToken(username, role);
+        user.setLastLoginAt(LocalDateTime.now());
+        userRepository.update(user);
+        
+        return generateToken(username, user.getRole());
     }
     
-    private String validateCredentials(String username, String password) {
-        // Demo credentials - replace with real authentication
-        if ("admin".equals(username) && "admin".equals(password)) {
-            return "ADMIN";
-        } else if ("user".equals(username) && "user".equals(password)) {
-            return "USER";
-        }
-        return null;
-    }
-    
-    private String generateToken(String username, String role) {
+    private String generateToken(String username, Role role) {
+        String roleName = role != null ? role.getName() : "USER";
+        
         return Jwt.issuer(issuer)
                 .upn(username)
-                .groups(new HashSet<>(Arrays.asList(role)))
+                .groups(Set.of(roleName))
                 .expiresIn(TOKEN_DURATION)
                 .sign();
     }
