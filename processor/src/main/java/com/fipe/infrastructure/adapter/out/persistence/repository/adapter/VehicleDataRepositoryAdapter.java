@@ -1,10 +1,10 @@
-package com.fipe.infrastructure.adapter.out.persistence.adapter;
+package com.fipe.infrastructure.adapter.out.persistence.repository.adapter;
 
 import com.fipe.domain.model.VehicleData;
 import com.fipe.domain.port.out.repository.VehicleDataRepositoryPort;
 import com.fipe.infrastructure.adapter.out.persistence.entity.VehicleDataEntity;
 import com.fipe.infrastructure.adapter.out.persistence.mapper.VehicleDataMapper;
-import com.fipe.infrastructure.adapter.out.persistence.repository.VehicleDataRepository;
+import com.fipe.infrastructure.adapter.out.persistence.repository.jpa.VehicleDataRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
