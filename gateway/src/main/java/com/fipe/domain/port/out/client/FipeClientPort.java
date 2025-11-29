@@ -5,6 +5,5 @@ import com.fipe.domain.model.Brand;
 import java.util.List;
 
 public interface FipeClientPort {
-    
     List<Brand> fetchAllBrands();
 }

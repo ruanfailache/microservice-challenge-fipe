@@ -39,12 +39,12 @@ public class UserServiceClientAdapter implements UserServiceClientPort {
                 new UserAuthenticationRequest(username, password)
             );
             
-            if (!response.active()) {
+            if (!response.isActive()) {
                 throw new AuthenticationException("User account is inactive");
             }
             
             LOG.infof("Successfully validated credentials for user: %s", username);
-            return Role.fromString(response.role());
+            return Role.fromString(response.getRole());
             
         } catch (Exception e) {
             LOG.errorf(e, "Failed to validate credentials for user: %s", username);

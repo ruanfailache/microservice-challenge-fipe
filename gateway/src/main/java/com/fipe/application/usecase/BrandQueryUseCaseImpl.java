@@ -23,18 +23,15 @@ public class BrandQueryUseCaseImpl implements BrandQueryUseCase {
     VehicleCachePort vehicleCachePort;
     
     public List<Brand> getAllBrands() {
-        // Try to get from cache first
-        return vehicleCachePort.getAllBrands()
-                .orElseGet(() -> {
-                    LOG.info("Fetching all brands from database");
-                    List<Brand> brands = brandRepositoryPort.findAll();
-                    vehicleCachePort.cacheAllBrands(brands);
-                    return brands;
-                });
+        return vehicleCachePort.getAllBrands().orElseGet(() -> {
+            LOG.info("Fetching all brands from database");
+            List<Brand> brands = brandRepositoryPort.findAll();
+            vehicleCachePort.cacheAllBrands(brands);
+            return brands;
+        });
     }
     
     public Brand getBrandByCode(String code) {
-        return brandRepositoryPort.findByCode(code)
-                .orElseThrow(() -> new NotFoundException("Brand", code));
+        return brandRepositoryPort.findByCode(code).orElseThrow(() -> new NotFoundException("Brand", code));
     }
 }

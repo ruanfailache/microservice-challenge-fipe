@@ -31,7 +31,6 @@ public class VehicleUpdateUseCaseImpl implements VehicleUpdateUseCase {
         
         Vehicle updated = vehicleRepositoryPort.save(vehicle);
         
-        // Invalidate cache for this brand
         vehicleCachePort.invalidateVehicleCache(vehicle.getBrandCode());
         
         LOG.infof("Vehicle updated successfully: %d", id);

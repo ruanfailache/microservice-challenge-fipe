@@ -27,7 +27,6 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     public int executeInitialLoad() {
         LOG.info("Starting initial load process");
         
-        // Fetch all brands from external API
         List<Brand> brands = fipeClientPort.fetchAllBrands();
     
         if (brands.isEmpty()) {
@@ -37,18 +36,17 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
         
         LOG.infof("Found %d brands to process", brands.size());
         
-        // Publish each brand for processing
         int processedCount = 0;
+
         for (Brand brand : brands) {
             try {
                 vehicleDataPublisherPort.publishBrandForProcessing(brand);
                 processedCount++;
             } catch (Exception e) {
                 LOG.errorf(e, "Failed to publish brand: %s", brand.getCode());
-                // Continue processing other brands
             }
         }
-        
+
         LOG.infof("Initial load completed. Published %d brands for processing", processedCount);
         return processedCount;
     }

@@ -23,18 +23,15 @@ public class VehicleQueryUseCaseImpl implements VehicleQueryUseCase {
     VehicleCachePort vehicleCachePort;
     
     public List<Vehicle> getVehiclesByBrandCode(String brandCode) {
-        // Try to get from cache first
-        return vehicleCachePort.getVehiclesByBrandCode(brandCode)
-                .orElseGet(() -> {
-                    LOG.infof("Fetching vehicles from database for brand: %s", brandCode);
-                    List<Vehicle> vehicles = vehicleRepositoryPort.findByBrandCode(brandCode);
-                    vehicleCachePort.cacheVehiclesByBrandCode(brandCode, vehicles);
-                    return vehicles;
-                });
+        return vehicleCachePort.getVehiclesByBrandCode(brandCode).orElseGet(() -> {
+            LOG.infof("Fetching vehicles from database for brand: %s", brandCode);
+            List<Vehicle> vehicles = vehicleRepositoryPort.findByBrandCode(brandCode);
+            vehicleCachePort.cacheVehiclesByBrandCode(brandCode, vehicles);
+            return vehicles;
+        });
     }
     
     public Vehicle getVehicleById(Long id) {
-        return vehicleRepositoryPort.findById(id)
-                .orElseThrow(() -> new NotFoundException("Vehicle", String.valueOf(id)));
+        return vehicleRepositoryPort.findById(id).orElseThrow(() -> new NotFoundException("Vehicle", String.valueOf(id)));
     }
 }

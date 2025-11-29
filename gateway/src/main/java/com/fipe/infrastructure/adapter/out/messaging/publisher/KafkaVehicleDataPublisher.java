@@ -27,7 +27,6 @@ public class KafkaVehicleDataPublisher implements VehicleDataPublisherPort {
                     brand.getName()
             );
             
-            // Add Kafka headers with message key
             OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
                     .withKey(brand.getCode())
                     .build();
