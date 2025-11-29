@@ -7,5 +7,6 @@
 
     <include file="db/changelog/changes/001-create-vehicle-data-table.sql"/>
     <include file="db/changelog/changes/002-add-observations-column.sql"/>
+    <include file="db/changelog/003-create-processing-failures-table.yaml"/>
 
 </databaseChangeLog>

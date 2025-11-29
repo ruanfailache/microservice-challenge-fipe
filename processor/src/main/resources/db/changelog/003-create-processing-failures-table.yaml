@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-processing-failures-table
+      author: system
+      changes:
+        - createTable:
+            tableName: processing_failures
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: brand_code
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: brand_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: failure_reason
+                  type: TEXT
+              - column:
+                  name: stack_trace
+                  type: TEXT
+              - column:
+                  name: retry_count
+                  type: INTEGER
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kafka_topic
+                  type: VARCHAR(255)
+              - column:
+                  name: kafka_partition
+                  type: INTEGER
+              - column:
+                  name: kafka_offset
+                  type: BIGINT
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_attempt_at
+                  type: TIMESTAMP
+        - createIndex:
+            indexName: idx_processing_failures_status
+            tableName: processing_failures
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            indexName: idx_processing_failures_brand_code
+            tableName: processing_failures
+            columns:
+              - column:
+                  name: brand_code
+        - createIndex:
+            indexName: idx_processing_failures_created_at
+            tableName: processing_failures
+            columns:
+              - column:
+                  name: created_at
