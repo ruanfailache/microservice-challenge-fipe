@@ -9,8 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InitialLoadResponse {
-    private String message;
-    private Integer brandsProcessed;
-    private String status;
+public class FailureStatisticsResponse {
+    
+    private long pendingRetry;
+    private long retryExhausted;
+    private long manualReview;
+    private long resolved;
+    private long total;
 }

@@ -11,13 +11,18 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VehicleResponse {
+public class ProcessingFailureResponse {
+    
     private Long id;
     private String brandCode;
     private String brandName;
-    private String code;
-    private String model;
-    private String observations;
+    private String failureReason;
+    private String stackTrace;
+    private Integer retryCount;
+    private String kafkaTopic;
+    private Integer kafkaPartition;
+    private Long kafkaOffset;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime lastAttemptAt;
+    private String status;
 }

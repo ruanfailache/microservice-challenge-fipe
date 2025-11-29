@@ -34,15 +34,15 @@ public class RetryFailedMessagesUseCaseImpl implements RetryFailedMessagesUseCas
     
     @Override
     @Transactional
-    public RetryResult retryEligibleFailures() {
-        LOG.info("Starting retry of failed messages");
+    public com.fipe.domain.model.RetryResult retryEligibleFailures() {
+        LOG.info("Starting retry of eligible failed messages...");
         
         LocalDateTime retryThreshold = LocalDateTime.now().minusMinutes(RETRY_DELAY_MINUTES);
         List<ProcessingFailure> eligibleFailures = repository.findEligibleForRetry(retryThreshold);
         
         if (eligibleFailures.isEmpty()) {
-            LOG.info("No failed messages eligible for retry");
-            return new RetryResult(0, 0, 0);
+            LOG.info("No failed messages eligible for retry at this time.");
+            return new com.fipe.domain.model.RetryResult(0, 0, 0);
         }
         
         LOG.infof("Found %d failures eligible for retry", eligibleFailures.size());
@@ -89,7 +89,7 @@ public class RetryFailedMessagesUseCaseImpl implements RetryFailedMessagesUseCas
         LOG.infof("Retry completed - Success: %d, Failed: %d, Exhausted: %d",
                 successCount, failedCount, exhaustedCount);
         
-        return new RetryResult(successCount, failedCount, exhaustedCount);
+        return new com.fipe.domain.model.RetryResult(successCount, failedCount, exhaustedCount);
     }
     
     private String extractStackTrace(Exception e) {

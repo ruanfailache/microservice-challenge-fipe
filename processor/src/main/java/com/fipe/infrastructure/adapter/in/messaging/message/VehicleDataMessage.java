@@ -1,31 +1,15 @@
 package com.fipe.infrastructure.adapter.in.messaging.message;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehicleDataMessage {
-    
     private String brandCode;
     private String brandName;
-    
-    public VehicleDataMessage() {
-    }
-    
-    public VehicleDataMessage(String brandCode, String brandName) {
-        this.brandCode = brandCode;
-        this.brandName = brandName;
-    }
-    
-    public String getBrandCode() {
-        return brandCode;
-    }
-    
-    public void setBrandCode(String brandCode) {
-        this.brandCode = brandCode;
-    }
-    
-    public String getBrandName() {
-        return brandName;
-    }
-    
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
 }

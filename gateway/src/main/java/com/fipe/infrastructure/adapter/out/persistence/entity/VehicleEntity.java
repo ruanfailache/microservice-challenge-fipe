@@ -1,13 +1,19 @@
 package com.fipe.infrastructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"brand_code", "code"})
 })
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 public class VehicleEntity {
     
     @Id
@@ -44,82 +50,5 @@ public class VehicleEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getBrandCode() {
-        return brandCode;
-    }
-    
-    public void setBrandCode(String brandCode) {
-        this.brandCode = brandCode;
-    }
-    
-    public String getBrandName() {
-        return brandName;
-    }
-    
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
-    
-    public String getCode() {
-        return code;
-    }
-    
-    public void setCode(String code) {
-        this.code = code;
-    }
-    
-    public String getModel() {
-        return model;
-    }
-    
-    public void setModel(String model) {
-        this.model = model;
-    }
-    
-    public String getObservations() {
-        return observations;
-    }
-    
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VehicleEntity that = (VehicleEntity) o;
-        return Objects.equals(id, that.id);
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

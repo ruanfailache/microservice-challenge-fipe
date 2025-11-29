@@ -1,10 +1,15 @@
 package com.fipe.infrastructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "processing_failures")
+@Getter
+@Setter
 public class ProcessingFailureEntity {
     
     @Id
@@ -43,40 +48,4 @@ public class ProcessingFailureEntity {
     
     @Column(name = "status", nullable = false)
     private String status;
-    
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    
-    public String getBrandCode() { return brandCode; }
-    public void setBrandCode(String brandCode) { this.brandCode = brandCode; }
-    
-    public String getBrandName() { return brandName; }
-    public void setBrandName(String brandName) { this.brandName = brandName; }
-    
-    public String getFailureReason() { return failureReason; }
-    public void setFailureReason(String failureReason) { this.failureReason = failureReason; }
-    
-    public String getStackTrace() { return stackTrace; }
-    public void setStackTrace(String stackTrace) { this.stackTrace = stackTrace; }
-    
-    public Integer getRetryCount() { return retryCount; }
-    public void setRetryCount(Integer retryCount) { this.retryCount = retryCount; }
-    
-    public String getKafkaTopic() { return kafkaTopic; }
-    public void setKafkaTopic(String kafkaTopic) { this.kafkaTopic = kafkaTopic; }
-    
-    public Integer getKafkaPartition() { return kafkaPartition; }
-    public void setKafkaPartition(Integer kafkaPartition) { this.kafkaPartition = kafkaPartition; }
-    
-    public Long getKafkaOffset() { return kafkaOffset; }
-    public void setKafkaOffset(Long kafkaOffset) { this.kafkaOffset = kafkaOffset; }
-    
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    
-    public LocalDateTime getLastAttemptAt() { return lastAttemptAt; }
-    public void setLastAttemptAt(LocalDateTime lastAttemptAt) { this.lastAttemptAt = lastAttemptAt; }
-    
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 }

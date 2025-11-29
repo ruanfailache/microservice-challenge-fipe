@@ -1,8 +1,13 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
-import com.fipe.domain.exception.ResourceNotFoundException;
+import com.fipe.domain.model.FailureStatistics;
 import com.fipe.domain.model.ProcessingFailure;
 import com.fipe.domain.port.in.usecase.ManageProcessingFailureUseCase;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.CleanupResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.FailureStatisticsResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ProcessingFailureResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.ProcessingFailureRestMapper;
+import com.fipe.infrastructure.adapter.in.rest.openapi.FailureManagementApi;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,75 +18,74 @@ import java.util.List;
 @Path("/api/failures")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class FailureManagementController {
+public class FailureManagementController implements FailureManagementApi {
     
     @Inject
     ManageProcessingFailureUseCase useCase;
     
     @GET
     @Path("/status/{status}")
+    @Override
     public Response getByStatus(@PathParam("status") String status) {
-        try {
-            List<ProcessingFailure> failures = useCase.findByStatus(status);
-            return Response.ok(failures).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid status. Valid values: PENDING_RETRY, RETRY_EXHAUSTED, MANUAL_REVIEW_REQUIRED, RESOLVED")
-                    .build();
-        }
+        List<ProcessingFailure> failures = useCase.findByStatus(status);
+        List<ProcessingFailureResponse> response = ProcessingFailureRestMapper.toResponseList(failures);
+        return Response.ok(response).build();
     }
     
     @GET
     @Path("/{id}")
+    @Override
     public Response getById(@PathParam("id") Long id) {
-        try {
-            ProcessingFailure failure = useCase.findById(id);
-            return Response.ok(failure).build();
-        } catch (ResourceNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        ProcessingFailure failure = useCase.findById(id);
+        ProcessingFailureResponse response = ProcessingFailureRestMapper.toResponse(failure);
+        return Response.ok(response).build();
     }
     
     @GET
     @Path("/brand/{brandCode}")
+    @Override
     public Response getByBrand(@PathParam("brandCode") String brandCode) {
         List<ProcessingFailure> failures = useCase.findByBrandCode(brandCode);
-        return Response.ok(failures).build();
+        List<ProcessingFailureResponse> response = ProcessingFailureRestMapper.toResponseList(failures);
+        return Response.ok(response).build();
     }
     
     @PUT
     @Path("/{id}/retry")
+    @Override
     public Response markForRetry(@PathParam("id") Long id) {
-        try {
-            ProcessingFailure failure = useCase.markForRetry(id);
-            return Response.ok(failure).build();
-        } catch (ResourceNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        ProcessingFailure failure = useCase.markForRetry(id);
+        ProcessingFailureResponse response = ProcessingFailureRestMapper.toResponse(failure);
+        return Response.ok(response).build();
     }
     
     @PUT
     @Path("/{id}/resolve")
+    @Override
     public Response markAsResolved(@PathParam("id") Long id) {
-        try {
-            ProcessingFailure failure = useCase.markAsResolved(id);
-            return Response.ok(failure).build();
-        } catch (ResourceNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        ProcessingFailure failure = useCase.markAsResolved(id);
+        ProcessingFailureResponse response = ProcessingFailureRestMapper.toResponse(failure);
+        return Response.ok(response).build();
     }
     
     @GET
     @Path("/statistics")
+    @Override
     public Response getStatistics() {
-        ManageProcessingFailureUseCase.FailureStatistics stats = useCase.getStatistics();
-        return Response.ok(stats).build();
+        FailureStatistics stats = useCase.getStatistics();
+        FailureStatisticsResponse response = ProcessingFailureRestMapper.toResponse(stats);
+        return Response.ok(response).build();
     }
     
     @DELETE
     @Path("/cleanup")
+    @Override
     public Response cleanup(@QueryParam("days") @DefaultValue("30") int days) {
         long deleted = useCase.cleanupResolvedFailures(days);
-        return Response.ok("Deleted " + deleted + " resolved failures").build();
+        CleanupResponse response = new CleanupResponse(
+                "Successfully deleted old resolved failures",
+                deleted
+        );
+        return Response.ok(response).build();
     }
 }

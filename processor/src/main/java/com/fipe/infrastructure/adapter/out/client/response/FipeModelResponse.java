@@ -1,31 +1,26 @@
 package com.fipe.infrastructure.adapter.out.client.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class FipeModelResponse {
     
+    @JsonProperty("codigo")
     private String codigo;
+    
+    @JsonProperty("nome")
     private String nome;
-    
-    public FipeModelResponse() {
-    }
-    
-    public FipeModelResponse(String codigo, String nome) {
-        this.codigo = codigo;
-        this.nome = nome;
-    }
     
     public String getCode() {
         return codigo;
     }
     
-    public void setCode(String codigo) {
-        this.codigo = codigo;
-    }
-    
     public String getName() {
         return nome;
-    }
-    
-    public void setName(String nome) {
-        this.nome = nome;
     }
 }

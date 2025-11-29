@@ -65,13 +65,13 @@ public class ManageProcessingFailureUseCaseImpl implements ManageProcessingFailu
     }
     
     @Override
-    public FailureStatistics getStatistics() {
+    public com.fipe.domain.model.FailureStatistics getStatistics() {
         long pendingRetry = repository.countByStatus(FailureStatus.PENDING_RETRY);
         long retryExhausted = repository.countByStatus(FailureStatus.RETRY_EXHAUSTED);
         long manualReview = repository.countByStatus(FailureStatus.MANUAL_REVIEW_REQUIRED);
         long resolved = repository.countByStatus(FailureStatus.RESOLVED);
         
-        return new FailureStatistics(pendingRetry, retryExhausted, manualReview, resolved);
+        return new com.fipe.domain.model.FailureStatistics(pendingRetry, retryExhausted, manualReview, resolved);
     }
     
     @Override
