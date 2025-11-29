@@ -1,14 +1,14 @@
-package com.fipe.infrastructure.adapter.in.rest.dto;
+package com.fipe.infrastructure.adapter.in.rest.dto.request;
 
-public class UpdateVehicleDTO {
+public class VehicleUpdateRequest {
     
     private String model;
     private String observations;
     
-    public UpdateVehicleDTO() {
+    public VehicleUpdateRequest() {
     }
     
-    public UpdateVehicleDTO(String model, String observations) {
+    public VehicleUpdateRequest(String model, String observations) {
         this.model = model;
         this.observations = observations;
     }

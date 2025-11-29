@@ -1,8 +1,8 @@
-package com.fipe.infrastructure.adapter.in.rest.dto;
+package com.fipe.infrastructure.adapter.in.rest.dto.response;
 
 import java.time.LocalDateTime;
 
-public class VehicleDTO {
+public class VehicleResponse {
     
     private Long id;
     private String brandCode;
@@ -13,10 +13,10 @@ public class VehicleDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    public VehicleDTO() {
+    public VehicleResponse() {
     }
     
-    public VehicleDTO(Long id, String brandCode, String brandName, String code, String model,
+    public VehicleResponse(Long id, String brandCode, String brandName, String code, String model,
                       String observations, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.brandCode = brandCode;

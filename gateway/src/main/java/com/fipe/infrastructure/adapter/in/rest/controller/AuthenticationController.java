@@ -1,8 +1,8 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.application.service.AuthenticationService;
-import com.fipe.infrastructure.adapter.in.rest.dto.LoginRequest;
-import com.fipe.infrastructure.adapter.in.rest.dto.LoginResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

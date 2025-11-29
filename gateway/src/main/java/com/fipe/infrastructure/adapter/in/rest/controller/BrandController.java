@@ -2,8 +2,8 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.application.service.BrandService;
 import com.fipe.domain.model.Brand;
-import com.fipe.infrastructure.adapter.in.rest.dto.BrandDTO;
-import com.fipe.infrastructure.adapter.in.rest.mapper.BrandDTOMapper;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.BrandMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.BrandApi;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
@@ -29,8 +29,8 @@ public class BrandController implements BrandApi {
     @Override
     public Response getAllBrands() {
         List<Brand> brands = brandService.getAllBrands();
-        List<BrandDTO> dtos = brands.stream()
-                .map(BrandDTOMapper::toDTO)
+        List<BrandResponse> dtos = brands.stream()
+                .map(BrandMapper::toDTO)
                 .collect(Collectors.toList());
         
         return Response.ok(dtos).build();
@@ -42,7 +42,7 @@ public class BrandController implements BrandApi {
     @Override
     public Response getBrandByCode(@PathParam("code") String code) {
         Brand brand = brandService.getBrandByCode(code);
-        BrandDTO dto = BrandDTOMapper.toDTO(brand);
+        BrandResponse dto = BrandMapper.toDTO(brand);
         return Response.ok(dto).build();
     }
 }

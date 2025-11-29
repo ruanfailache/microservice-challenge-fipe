@@ -1,14 +1,14 @@
-package com.fipe.infrastructure.adapter.in.rest.dto;
+package com.fipe.infrastructure.adapter.in.rest.dto.response;
 
-public class BrandDTO {
+public class BrandResponse {
     
     private String code;
     private String name;
     
-    public BrandDTO() {
+    public BrandResponse() {
     }
     
-    public BrandDTO(String code, String name) {
+    public BrandResponse(String code, String name) {
         this.code = code;
         this.name = name;
     }

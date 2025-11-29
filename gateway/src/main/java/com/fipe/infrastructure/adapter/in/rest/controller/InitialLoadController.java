@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
-import com.fipe.infrastructure.adapter.in.rest.dto.InitialLoadResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.InitialLoadApi;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

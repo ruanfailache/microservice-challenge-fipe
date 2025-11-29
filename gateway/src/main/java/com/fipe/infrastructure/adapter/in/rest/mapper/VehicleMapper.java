@@ -1,16 +1,16 @@
 package com.fipe.infrastructure.adapter.in.rest.mapper;
 
 import com.fipe.domain.model.Vehicle;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleDTO;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleResponse;
 
-public class VehicleDTOMapper {
+public class VehicleMapper {
     
-    public static VehicleDTO toDTO(Vehicle vehicle) {
+    public static VehicleResponse toDTO(Vehicle vehicle) {
         if (vehicle == null) {
             return null;
         }
         
-        return new VehicleDTO(
+        return new VehicleResponse(
                 vehicle.getId(),
                 vehicle.getBrandCode(),
                 vehicle.getBrandName(),
@@ -22,7 +22,7 @@ public class VehicleDTOMapper {
         );
     }
     
-    public static Vehicle toDomain(VehicleDTO dto) {
+    public static Vehicle toDomain(VehicleResponse dto) {
         if (dto == null) {
             return null;
         }

@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.LoginRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -10,7 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import com.fipe.infrastructure.adapter.in.rest.dto.LoginResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 
 @Tag(name = "Authentication", description = "Authentication operations")
 public interface AuthenticationApi {

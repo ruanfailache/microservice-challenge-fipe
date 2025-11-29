@@ -1,19 +1,19 @@
 package com.fipe.infrastructure.adapter.in.rest.mapper;
 
 import com.fipe.domain.model.Brand;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandDTO;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandResponse;
 
-public class BrandDTOMapper {
+public class BrandMapper {
     
-    public static BrandDTO toDTO(Brand brand) {
+    public static BrandResponse toDTO(Brand brand) {
         if (brand == null) {
             return null;
         }
         
-        return new BrandDTO(brand.getCode(), brand.getName());
+        return new BrandResponse(brand.getCode(), brand.getName());
     }
     
-    public static Brand toDomain(BrandDTO dto) {
+    public static Brand toDomain(BrandResponse dto) {
         if (dto == null) {
             return null;
         }

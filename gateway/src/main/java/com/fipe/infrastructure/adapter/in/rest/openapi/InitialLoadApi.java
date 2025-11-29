@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.InitialLoadResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadResponse;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;

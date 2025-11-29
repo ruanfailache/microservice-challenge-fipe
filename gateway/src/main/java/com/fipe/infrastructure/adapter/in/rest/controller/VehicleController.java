@@ -3,9 +3,9 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.application.service.VehicleQueryService;
 import com.fipe.application.service.VehicleUpdateService;
 import com.fipe.domain.model.Vehicle;
-import com.fipe.infrastructure.adapter.in.rest.dto.UpdateVehicleDTO;
-import com.fipe.infrastructure.adapter.in.rest.dto.VehicleDTO;
-import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleDTOMapper;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.VehicleApi;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -35,8 +35,8 @@ public class VehicleController implements VehicleApi {
     public Response getVehiclesByBrand(@PathParam("brandCode") String brandCode) {
         
         List<Vehicle> vehicles = vehicleQueryService.getVehiclesByBrandCode(brandCode);
-        List<VehicleDTO> dtos = vehicles.stream()
-                .map(VehicleDTOMapper::toDTO)
+        List<VehicleResponse> dtos = vehicles.stream()
+                .map(VehicleMapper::toDTO)
                 .collect(Collectors.toList());
         
         return Response.ok(dtos).build();
@@ -48,7 +48,7 @@ public class VehicleController implements VehicleApi {
     @Override
     public Response getVehicleById(@PathParam("id") Long id) {
         Vehicle vehicle = vehicleQueryService.getVehicleById(id);
-        VehicleDTO dto = VehicleDTOMapper.toDTO(vehicle);
+        VehicleResponse dto = VehicleMapper.toDTO(vehicle);
         return Response.ok(dto).build();
     }
     
@@ -56,13 +56,13 @@ public class VehicleController implements VehicleApi {
     @Path("/{id}")
     @RolesAllowed({"USER", "ADMIN"})
     @Override
-    public Response updateVehicle(@PathParam("id") Long id, UpdateVehicleDTO updateDTO) {
+    public Response updateVehicle(@PathParam("id") Long id, VehicleUpdateRequest updateDTO) {
         Vehicle updated = vehicleUpdateService.updateVehicle(
                 id, 
                 updateDTO.getModel(), 
                 updateDTO.getObservations()
         );
-        VehicleDTO dto = VehicleDTOMapper.toDTO(updated);
+        VehicleResponse dto = VehicleMapper.toDTO(updated);
         return Response.ok(dto).build();
     }
 }

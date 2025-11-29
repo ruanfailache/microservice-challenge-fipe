@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.BrandDTO;
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -18,7 +18,7 @@ public interface BrandApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Brands retrieved successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = BrandDTO.class))),
+                            schema = @Schema(implementation = BrandResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class)))
@@ -29,7 +29,7 @@ public interface BrandApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Brand retrieved successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = BrandDTO.class))),
+                            schema = @Schema(implementation = BrandResponse.class))),
             @APIResponse(responseCode = "404", description = "Brand not found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class))),

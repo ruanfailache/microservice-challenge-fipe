@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.ErrorResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.UpdateVehicleDTO;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -11,7 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import com.fipe.infrastructure.adapter.in.rest.dto.VehicleDTO;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleResponse;
 
 @Tag(name = "Vehicles", description = "Vehicle management operations")
 public interface VehicleApi {
@@ -21,7 +21,7 @@ public interface VehicleApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Vehicles retrieved successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = VehicleDTO.class))),
+                            schema = @Schema(implementation = VehicleResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class)))
@@ -33,7 +33,7 @@ public interface VehicleApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Vehicle retrieved successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = VehicleDTO.class))),
+                            schema = @Schema(implementation = VehicleResponse.class))),
             @APIResponse(responseCode = "404", description = "Vehicle not found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class))),
@@ -49,7 +49,7 @@ public interface VehicleApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Vehicle updated successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = VehicleDTO.class))),
+                            schema = @Schema(implementation = VehicleResponse.class))),
             @APIResponse(responseCode = "400", description = "Invalid input",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class))),
@@ -65,5 +65,5 @@ public interface VehicleApi {
     })
     Response updateVehicle(
             @Parameter(description = "Vehicle ID", required = true) Long id,
-            UpdateVehicleDTO updateDTO);
+            VehicleUpdateRequest updateDTO);
 }
