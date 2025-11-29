@@ -2,6 +2,8 @@ FROM maven:3.9-eclipse-temurin-21 AS build
 
 COPY pom.xml mvnw mvnw.cmd ./
 COPY .mvn .mvn
+RUN ./mvnw dependency:go-offline -B
+
 COPY src src
 RUN ./mvnw package -DskipTests
 

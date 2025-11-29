@@ -2,6 +2,7 @@ package com.fipe.infrastructure.adapter.in.messaging.consumer;
 
 import com.fipe.domain.port.in.usecase.ProcessVehicleDataUseCase;
 import com.fipe.infrastructure.adapter.in.messaging.message.VehicleDataMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.reactive.messaging.kafka.api.IncomingKafkaRecordMetadata;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -21,24 +22,26 @@ public class VehicleDataConsumer {
     @Inject
     ProcessVehicleDataUseCase useCase;
     
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
     @Incoming("vehicle-data-in")
     @Retry(maxRetries = 3, delay = 5, delayUnit = ChronoUnit.SECONDS, jitter = 1000)
-    public CompletionStage<Void> consume(Message<VehicleDataMessage> message) {
-        VehicleDataMessage data = message.getPayload();
-        logMessageReceived(message, data);
-        
+    public CompletionStage<Void> consume(Message<String> message) {
         try {
+            VehicleDataMessage data = objectMapper.readValue(message.getPayload(), VehicleDataMessage.class);
+            logMessageReceived(message, data);
+            
             useCase.processVehicleData(data.getBrandCode(), data.getBrandName());
             LOG.infof("Processed brand: %s", data.getBrandCode());
             return message.ack();
             
         } catch (Exception e) {
-            LOG.errorf(e, "Failed processing brand: %s", data.getBrandCode());
+            LOG.errorf(e, "Failed processing message: %s", message.getPayload());
             return message.nack(e);
         }
     }
     
-    private void logMessageReceived(Message<VehicleDataMessage> message, VehicleDataMessage data) {
+    private void logMessageReceived(Message<String> message, VehicleDataMessage data) {
         message.getMetadata(IncomingKafkaRecordMetadata.class).ifPresent(metadata ->
             LOG.infof("Received - Topic: %s, Partition: %d, Offset: %d, Brand: %s",
                     metadata.getTopic(), metadata.getPartition(), metadata.getOffset(), data.getBrandCode())

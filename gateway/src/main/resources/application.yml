@@ -11,7 +11,12 @@ quarkus:
       connect-timeout: 10000
       read-timeout: 30000
     user-service:
-      url: http://localhost:8081
+      url: http://localhost:8082
+      scope: jakarta.inject.Singleton
+      connect-timeout: 5000
+      read-timeout: 10000
+    user-auth-service:
+      url: http://localhost:8082
       scope: jakarta.inject.Singleton
       connect-timeout: 5000
       read-timeout: 10000
@@ -66,11 +71,3 @@ mp:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
         key:
           serializer: org.apache.kafka.common.serialization.StringSerializer
-  
-  jwt:
-    verify:
-      issuer: https://fipe-issuer
-      publickey:
-        algorithm: RS256
-    sign:
-      key-location: /privateKey.pem

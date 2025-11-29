@@ -10,6 +10,11 @@ quarkus:
       scope: jakarta.inject.Singleton
       connect-timeout: 10000
       read-timeout: 30000
+    user-auth-service:
+      url: http://localhost:8082
+      scope: jakarta.inject.Singleton
+      connect-timeout: 5000
+      read-timeout: 10000
   
   datasource:
     db-kind: postgresql
@@ -54,8 +59,7 @@ mp:
         connector: smallrye-kafka
         topic: vehicle-data
         value:
-          deserializer: io.quarkus.kafka.client.serialization.ObjectMapperDeserializer
-          deserializer.type: com.fipe.infrastructure.adapter.in.messaging.VehicleDataMessage
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
         key:
           deserializer: org.apache.kafka.common.serialization.StringDeserializer
         auto:
@@ -79,23 +83,12 @@ mp:
         connector: smallrye-kafka
         topic: vehicle-data-dlq
         value:
-          deserializer: io.quarkus.kafka.client.serialization.ObjectMapperDeserializer
-          deserializer.type: com.fipe.infrastructure.adapter.in.messaging.VehicleDataMessage
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
         key:
           deserializer: org.apache.kafka.common.serialization.StringDeserializer
         group:
           id: fipe-processor-dlq-group
-        enable:
-          auto:
-            commit: true
-  
-  jwt:
-    verify:
-      publickey:
-        location: https://localhost:8443/jwt/public-key
-      issuer: https://fipe-issuer
-  
-  # Fault Tolerance Configuration
+
   fault-tolerance:
     fipe-api-circuit-breaker:
       request-volume-threshold: 10

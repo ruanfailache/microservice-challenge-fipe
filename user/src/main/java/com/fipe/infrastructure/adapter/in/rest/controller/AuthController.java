@@ -4,6 +4,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
 import com.fipe.infrastructure.security.JwtAuthenticationService;
+import jakarta.annotation.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -37,5 +38,13 @@ public class AuthenticationController implements AuthenticationApi {
         );
         
         return Response.ok(response).build();
+    }
+    
+    @POST
+    @Path("/validate-token")
+    @Authenticated
+    public Response validateToken() {
+        // If the request reaches here, the token is valid
+        return Response.ok().build();
     }
 }

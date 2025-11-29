@@ -2,7 +2,7 @@ quarkus:
   application:
     name: fipe-user-service
   http:
-    port: 8081
+    port: 8082
   
   datasource:
     db-kind: postgresql
