@@ -3,7 +3,7 @@ package com.fipe.infrastructure.adapter.out.rest.adapter;
 import com.fipe.domain.exception.ExternalServiceException;
 import com.fipe.domain.model.Model;
 import com.fipe.domain.port.out.client.FipeClientPort;
-import com.fipe.infrastructure.adapter.out.rest.client.FipeRestClient;
+import com.fipe.infrastructure.adapter.out.rest.client.FipeClient;
 import com.fipe.infrastructure.adapter.out.rest.response.FipeModelsWrapper;
 import io.smallrye.faulttolerance.api.CircuitBreakerName;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,7 +24,7 @@ public class FipeClientAdapter implements FipeClientPort {
     
     @Inject
     @RestClient
-    FipeRestClient restClient;
+    FipeClient fipeClient;
     
     @Override
     @Retry(maxRetries = 3, delay = 2, delayUnit = ChronoUnit.SECONDS, jitter = 500,
@@ -40,7 +40,7 @@ public class FipeClientAdapter implements FipeClientPort {
         LOG.infof("Fetching models for brand: %s", brandCode);
         
         try {
-            FipeModelsWrapper response = restClient.getModels(brandCode);
+            FipeModelsWrapper response = fipeClient.getModels(brandCode);
             
             if (response == null || response.getModels() == null) {
                 LOG.warnf("No models found for brand: %s", brandCode);

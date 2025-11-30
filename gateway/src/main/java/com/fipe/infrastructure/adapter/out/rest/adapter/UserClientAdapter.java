@@ -2,40 +2,47 @@ package com.fipe.infrastructure.adapter.out.rest.adapter;
 
 import com.fipe.domain.enums.Role;
 import com.fipe.domain.exception.AuthenticationException;
-import com.fipe.domain.port.out.client.UserServiceClientPort;
+import com.fipe.domain.port.out.client.UserClientPort;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
 import com.fipe.infrastructure.adapter.out.rest.request.UserAuthenticationRequest;
 import com.fipe.infrastructure.adapter.out.rest.response.UserServiceResponse;
-import com.fipe.infrastructure.adapter.out.rest.client.UserServiceRestClient;
+import com.fipe.infrastructure.adapter.out.rest.client.UserClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 /**
- * Adapter for user service client operations
+ * Adapter for user client operations
  */
 @ApplicationScoped
-public class UserServiceClientAdapter implements UserServiceClientPort {
+public class UserClientAdapter implements UserClientPort {
     
-    private static final Logger LOG = Logger.getLogger(UserServiceClientAdapter.class);
+    private static final Logger LOG = Logger.getLogger(UserClientAdapter.class);
     
     @Inject
     @RestClient
-    UserServiceRestClient userServiceRestClient;
+    UserClient userClient;
     
-    /**
-     * Validate user credentials via user service
-     * 
-     * @param username the username
-     * @param password the password
-     * @return the user's role if authentication is successful
-     * @throws AuthenticationException if authentication fails
-     */
+    @Override
+    public UserResponse validateToken(String authorization) {
+        try {
+            LOG.debug("Validating token with user service");
+            UserResponse user = userClient.validateToken(authorization);
+            LOG.debugf("Token validated successfully for user: %s", user.username());
+            return user;
+        } catch (Exception e) {
+            LOG.warnf("Token validation failed: %s", e.getMessage());
+            throw new AuthenticationException("Invalid or expired token", e);
+        }
+    }
+    
+    @Override
     public Role validateCredentials(String username, String password) {
         try {
             LOG.infof("Validating credentials for user: %s", username);
             
-            UserServiceResponse response = userServiceRestClient.validateCredentials(
+            UserServiceResponse response = userClient.validateCredentials(
                 new UserAuthenticationRequest(username, password)
             );
             
@@ -52,16 +59,11 @@ public class UserServiceClientAdapter implements UserServiceClientPort {
         }
     }
     
-    /**
-     * Get user by username
-     * 
-     * @param username the username
-     * @return user response
-     */
+    @Override
     public UserServiceResponse getUserByUsername(String username) {
         try {
             LOG.infof("Fetching user by username: %s", username);
-            return userServiceRestClient.getUserByUsername(username);
+            return userClient.getUserByUsername(username);
         } catch (Exception e) {
             LOG.errorf(e, "Failed to fetch user: %s", username);
             throw new AuthenticationException("Failed to fetch user information");

@@ -1,7 +1,7 @@
-package com.fipe.infrastructure.security;
+package com.fipe.infrastructure.security.filter;
 
+import com.fipe.domain.port.out.client.UserClientPort;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
-import com.fipe.infrastructure.adapter.out.rest.client.UserAuthClient;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,7 +10,6 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -23,8 +22,7 @@ public class UserServiceAuthFilter implements ContainerRequestFilter {
     private static final Logger LOG = Logger.getLogger(UserServiceAuthFilter.class);
     
     @Inject
-    @RestClient
-    UserAuthClient userAuthClient;
+    UserClientPort userClientPort;
     
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -34,10 +32,8 @@ public class UserServiceAuthFilter implements ContainerRequestFilter {
             return;
         }
         
-        String token = authHeader.substring(7);
-        
         try {
-            UserResponse user = userAuthClient.validateToken("Bearer " + token);
+            UserResponse user = userClientPort.validateToken(authHeader);
             requestContext.setProperty("authenticatedUser", user);
             LOG.debugf("Token validated for user: %s with role: %s", user.username(), user.role());
         } catch (Exception e) {
@@ -46,3 +42,4 @@ public class UserServiceAuthFilter implements ContainerRequestFilter {
         }
     }
 }
+

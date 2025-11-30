@@ -7,7 +7,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.VehicleApi;
-import com.fipe.infrastructure.security.RequiresRole;
+import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

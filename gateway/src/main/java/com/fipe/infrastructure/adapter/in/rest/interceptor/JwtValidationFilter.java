@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.interceptor;
 
-import com.fipe.infrastructure.adapter.in.rest.service.UserAuthService;
-import com.fipe.infrastructure.adapter.out.rest.client.UserAuthClient;
+import com.fipe.domain.port.out.client.UserClientPort;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -12,7 +11,7 @@ import jakarta.ws.rs.ext.Provider;
 public class JwtValidationFilter implements ContainerRequestFilter {
     
     @Inject
-    UserAuthService userAuthService;
+    UserClientPort userClientPort;
     
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -30,8 +29,7 @@ public class JwtValidationFilter implements ContainerRequestFilter {
         }
         
         try {
-            UserAuthClient userAuthClient = userAuthService.getUserAuthClient();
-            userAuthClient.validateToken(authorization);
+            userClientPort.validateToken(authorization);
             // If we get here, token is valid
         } catch (Exception e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

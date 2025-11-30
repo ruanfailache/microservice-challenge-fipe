@@ -1,6 +1,7 @@
-package com.fipe.infrastructure.security;
+package com.fipe.infrastructure.security.filter;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -51,3 +52,4 @@ public class RoleCheckFilter implements ContainerRequestFilter {
         }
     }
 }
+

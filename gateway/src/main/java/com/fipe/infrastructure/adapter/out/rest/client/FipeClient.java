@@ -11,9 +11,10 @@ import java.util.List;
 
 @Path("/carros/marcas")
 @RegisterRestClient(configKey = "fipe-api")
-public interface FipeRestClient {
+public interface FipeClient {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<FipeBrandResponse> getBrands();
 }
+

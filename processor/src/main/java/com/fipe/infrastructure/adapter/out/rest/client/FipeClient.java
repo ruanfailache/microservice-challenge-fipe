@@ -10,10 +10,11 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/carros/marcas")
 @RegisterRestClient(configKey = "fipe-api")
-public interface FipeRestClient {
+public interface FipeClient {
     
     @GET
     @Path("/{brandId}/modelos")
     @Produces(MediaType.APPLICATION_JSON)
     FipeModelsWrapper getModels(@PathParam("brandId") String brandId);
 }
+

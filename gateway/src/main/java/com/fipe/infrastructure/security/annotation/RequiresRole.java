@@ -1,4 +1,4 @@
-package com.fipe.infrastructure.security;
+package com.fipe.infrastructure.security.annotation;
 
 import jakarta.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;
@@ -15,3 +15,4 @@ import java.lang.annotation.Target;
 public @interface RequiresRole {
     String[] value();
 }
+

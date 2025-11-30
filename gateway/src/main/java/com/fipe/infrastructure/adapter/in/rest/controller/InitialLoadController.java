@@ -3,7 +3,7 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.InitialLoadApi;
-import com.fipe.infrastructure.security.RequiresRole;
+import com.fipe.infrastructure.security.annotation.RequiresRole;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
