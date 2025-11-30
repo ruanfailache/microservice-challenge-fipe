@@ -19,25 +19,28 @@ public class VehicleRepositoryAdapter implements VehicleRepositoryPort {
     @Inject
     VehicleRepository vehicleRepository;
     
+    @Inject
+    VehicleMapper vehicleMapper;
+    
     @Override
     public List<Vehicle> findByBrandCode(String brandCode) {
         return vehicleRepository.findByBrandCode(brandCode).stream()
-                .map(VehicleMapper::toDomain)
+                .map(vehicleMapper::toDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public Optional<Vehicle> findById(Long id) {
         return vehicleRepository.findByIdOptional(id)
-                .map(VehicleMapper::toDomain);
+                .map(vehicleMapper::toDomain);
     }
     
     @Override
     @Transactional
     public Vehicle save(Vehicle vehicle) {
-        VehicleEntity entity = VehicleMapper.toEntity(vehicle);
+        VehicleEntity entity = vehicleMapper.toEntity(vehicle);
         vehicleRepository.persist(entity);
-        return VehicleMapper.toDomain(entity);
+        return vehicleMapper.toDomain(entity);
     }
     
     @Override

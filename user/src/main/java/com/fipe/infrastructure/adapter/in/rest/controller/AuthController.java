@@ -3,6 +3,7 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
 import com.fipe.infrastructure.security.JwtAuthenticationService;
 import com.fipe.domain.model.User;
@@ -31,6 +32,9 @@ public class AuthController implements AuthenticationApi {
     @Inject
     JsonWebToken jwt;
     
+    @Inject
+    UserResponseMapper userResponseMapper;
+    
     @POST
     @Path("/login")
     @Override
@@ -58,6 +62,6 @@ public class AuthController implements AuthenticationApi {
         String username = jwt.getName();
         // Fetch user details
         User user = getUserUseCase.getByUsername(username);
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
 }

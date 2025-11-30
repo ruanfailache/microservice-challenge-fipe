@@ -20,24 +20,27 @@ public class ProcessingFailureRepositoryAdapter implements ProcessingFailureRepo
     @Inject
     ProcessingFailureJpaRepository jpaRepository;
     
+    @Inject
+    ProcessingFailureMapper processingFailureMapper;
+    
     @Override
     @Transactional
     public ProcessingFailure save(ProcessingFailure failure) {
-        var entity = ProcessingFailureMapper.toEntity(failure);
+        var entity = processingFailureMapper.toEntity(failure);
         jpaRepository.persist(entity);
-        return ProcessingFailureMapper.toDomain(entity);
+        return processingFailureMapper.toDomain(entity);
     }
     
     @Override
     public Optional<ProcessingFailure> findById(Long id) {
         return jpaRepository.findByIdOptional(id)
-                .map(ProcessingFailureMapper::toDomain);
+                .map(processingFailureMapper::toDomain);
     }
     
     @Override
     public List<ProcessingFailure> findByStatus(FailureStatus status) {
         return jpaRepository.findByStatus(status.name()).stream()
-                .map(ProcessingFailureMapper::toDomain)
+                .map(processingFailureMapper::toDomain)
                 .collect(Collectors.toList());
     }
     
@@ -47,14 +50,14 @@ public class ProcessingFailureRepositoryAdapter implements ProcessingFailureRepo
                 FailureStatus.PENDING_RETRY.name(), 
                 beforeTime
         ).stream()
-                .map(ProcessingFailureMapper::toDomain)
+                .map(processingFailureMapper::toDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ProcessingFailure> findByBrandCode(String brandCode) {
         return jpaRepository.findByBrandCode(brandCode).stream()
-                .map(ProcessingFailureMapper::toDomain)
+                .map(processingFailureMapper::toDomain)
                 .collect(Collectors.toList());
     }
     

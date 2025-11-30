@@ -17,16 +17,19 @@ public class VehicleDataRepositoryAdapter implements VehicleDataRepositoryPort {
     @Inject
     VehicleDataRepository vehicleDataRepository;
     
+    @Inject
+    VehicleDataMapper vehicleDataMapper;
+    
     @Override
     public VehicleData save(VehicleData vehicleData) {
         LOG.debugf("Saving vehicle data: brand=%s, code=%s", 
                 vehicleData.getBrandCode(), vehicleData.getCode());
         
-        VehicleDataEntity entity = VehicleDataMapper.toEntity(vehicleData);
+        VehicleDataEntity entity = vehicleDataMapper.toEntity(vehicleData);
         vehicleDataRepository.persist(entity);
         
         LOG.debugf("Vehicle data saved with id: %d", entity.getId());
-        return VehicleDataMapper.toDomain(entity);
+        return vehicleDataMapper.toDomain(entity);
     }
     
     @Override

@@ -11,6 +11,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.request.ChangePasswordRequest
 import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.UpdateUserRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -46,6 +47,9 @@ public class UserController {
     @Inject
     ChangePasswordUseCase changePasswordUseCase;
     
+    @Inject
+    UserResponseMapper userResponseMapper;
+    
     @POST
     @RolesAllowed({"ADMIN"})
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details. Requires ADMIN role.")
@@ -62,7 +66,7 @@ public class UserController {
         );
         
         return Response.status(Response.Status.CREATED)
-            .entity(UserResponse.fromDomain(user))
+            .entity(userResponseMapper.toResponse(user))
             .build();
     }
     
@@ -82,7 +86,7 @@ public class UserController {
             )
         );
         
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
     
     @GET
@@ -91,7 +95,7 @@ public class UserController {
     @Operation(summary = "Get user by ID", description = "Retrieves a user by their ID. Requires ADMIN or MANAGER role.")
     public Response getUserById(@PathParam("id") Long id) {
         User user = getUserUseCase.getById(id);
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
     
     @GET
@@ -100,7 +104,7 @@ public class UserController {
     @Operation(summary = "Get user by username", description = "Retrieves a user by their username. Requires ADMIN or MANAGER role.")
     public Response getUserByUsername(@PathParam("username") String username) {
         User user = getUserUseCase.getByUsername(username);
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
     
     @GET
@@ -109,7 +113,7 @@ public class UserController {
     public Response getAllUsers(@QueryParam("activeOnly") @DefaultValue("false") boolean activeOnly) {
         List<User> users = activeOnly ? getUserUseCase.getAllActive() : getUserUseCase.getAll();
         List<UserResponse> response = users.stream()
-            .map(UserResponse::fromDomain)
+            .map(userResponseMapper::toResponse)
             .collect(Collectors.toList());
         
         return Response.ok(response).build();

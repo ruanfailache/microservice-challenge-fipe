@@ -24,13 +24,16 @@ public class BrandController implements BrandApi {
     @Inject
     BrandQueryUseCase brandQueryUseCase;
     
+    @Inject
+    BrandMapper brandMapper;
+    
     @GET
     @PermitAll
     @Override
     public Response getAllBrands() {
         List<Brand> brands = brandQueryUseCase.getAllBrands();
         List<BrandResponse> dtos = brands.stream()
-                .map(BrandMapper::toDTO)
+                .map(brandMapper::toDTO)
                 .collect(Collectors.toList());
         
         return Response.ok(dtos).build();
@@ -42,7 +45,7 @@ public class BrandController implements BrandApi {
     @Override
     public Response getBrandByCode(@PathParam("code") String code) {
         Brand brand = brandQueryUseCase.getBrandByCode(code);
-        BrandResponse dto = BrandMapper.toDTO(brand);
+        BrandResponse dto = brandMapper.toDTO(brand);
         return Response.ok(dto).build();
     }
 }

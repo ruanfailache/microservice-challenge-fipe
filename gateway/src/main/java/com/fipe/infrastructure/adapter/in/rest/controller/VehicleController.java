@@ -27,6 +27,9 @@ public class VehicleController implements VehicleApi {
     @Inject
     VehicleUpdateUseCase vehicleUpdateUseCase;
     
+    @Inject
+    VehicleMapper vehicleMapper;
+    
     @GET
     @Path("/brand/{brandCode}")
     @Override
@@ -34,7 +37,7 @@ public class VehicleController implements VehicleApi {
         
         List<Vehicle> vehicles = vehicleQueryUseCase.getVehiclesByBrandCode(brandCode);
         List<VehicleResponse> dtos = vehicles.stream()
-                .map(VehicleMapper::toDTO)
+                .map(vehicleMapper::toDTO)
                 .collect(Collectors.toList());
         
         return Response.ok(dtos).build();
@@ -45,7 +48,7 @@ public class VehicleController implements VehicleApi {
     @Override
     public Response getVehicleById(@PathParam("id") Long id) {
         Vehicle vehicle = vehicleQueryUseCase.getVehicleById(id);
-        VehicleResponse dto = VehicleMapper.toDTO(vehicle);
+        VehicleResponse dto = vehicleMapper.toDTO(vehicle);
         return Response.ok(dto).build();
     }
     
@@ -60,7 +63,7 @@ public class VehicleController implements VehicleApi {
                 updateDTO.getModel(), 
                 updateDTO.getObservations()
         );
-        VehicleResponse dto = VehicleMapper.toDTO(updated);
+        VehicleResponse dto = vehicleMapper.toDTO(updated);
         return Response.ok(dto).build();
     }
 }

@@ -4,6 +4,7 @@ import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.AuthenticateUserUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -23,6 +24,9 @@ public class AuthenticationController {
     @Inject
     AuthenticateUserUseCase authenticateUserUseCase;
     
+    @Inject
+    UserResponseMapper userResponseMapper;
+    
     @POST
     @Path("/validate")
     @Operation(summary = "Validate user credentials", description = "Validates username and password, returns user if valid")
@@ -34,7 +38,7 @@ public class AuthenticationController {
             )
         );
         
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
     
     @POST
@@ -48,6 +52,6 @@ public class AuthenticationController {
             )
         );
         
-        return Response.ok(UserResponse.fromDomain(user)).build();
+        return Response.ok(userResponseMapper.toResponse(user)).build();
     }
 }

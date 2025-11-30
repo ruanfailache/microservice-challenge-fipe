@@ -18,25 +18,28 @@ public class BrandRepositoryAdapter implements BrandRepositoryPort {
     @Inject
     BrandRepository brandRepository;
     
+    @Inject
+    BrandMapper brandMapper;
+    
     @Override
     public List<Brand> findAll() {
         return brandRepository.listAll().stream()
-                .map(BrandMapper::toDomain)
+                .map(brandMapper::toDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public Optional<Brand> findByCode(String code) {
         return brandRepository.findByCode(code)
-                .map(BrandMapper::toDomain);
+                .map(brandMapper::toDomain);
     }
     
     @Override
     @Transactional
     public Brand save(Brand brand) {
-        var entity = BrandMapper.toEntity(brand);
+        var entity = brandMapper.toEntity(brand);
         brandRepository.persist(entity);
-        return BrandMapper.toDomain(entity);
+        return brandMapper.toDomain(entity);
     }
     
     @Override
