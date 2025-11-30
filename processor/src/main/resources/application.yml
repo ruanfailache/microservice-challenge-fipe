@@ -10,7 +10,7 @@ quarkus:
       scope: jakarta.inject.Singleton
       connect-timeout: 10000
       read-timeout: 30000
-    user-auth-service:
+    user-service:
       url: http://localhost:8082
       scope: jakarta.inject.Singleton
       connect-timeout: 5000

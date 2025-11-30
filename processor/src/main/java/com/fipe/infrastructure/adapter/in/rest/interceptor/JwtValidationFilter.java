@@ -1,19 +1,18 @@
 package com.fipe.infrastructure.adapter.in.rest.interceptor;
 
+import com.fipe.infrastructure.adapter.in.rest.service.UserAuthService;
 import com.fipe.infrastructure.adapter.out.rest.client.UserAuthClient;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @Provider
 public class JwtValidationFilter implements ContainerRequestFilter {
     
     @Inject
-    @RestClient
-    UserAuthClient userAuthClient;
+    UserAuthService userAuthService;
     
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -31,6 +30,7 @@ public class JwtValidationFilter implements ContainerRequestFilter {
         }
         
         try {
+            UserAuthClient userAuthClient = userAuthService.getUserAuthClient();
             Response response = userAuthClient.validateToken(authorization);
             if (response.getStatus() != 200) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

@@ -7,8 +7,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.VehicleApi;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
+import com.fipe.infrastructure.security.RequiresRole;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -30,7 +29,6 @@ public class VehicleController implements VehicleApi {
     
     @GET
     @Path("/brand/{brandCode}")
-    @PermitAll
     @Override
     public Response getVehiclesByBrand(@PathParam("brandCode") String brandCode) {
         
@@ -44,7 +42,6 @@ public class VehicleController implements VehicleApi {
     
     @GET
     @Path("/{id}")
-    @PermitAll
     @Override
     public Response getVehicleById(@PathParam("id") Long id) {
         Vehicle vehicle = vehicleQueryUseCase.getVehicleById(id);
@@ -54,9 +51,10 @@ public class VehicleController implements VehicleApi {
     
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"USER", "ADMIN"})
+    @RequiresRole({"USER", "ADMIN"})
     @Override
     public Response updateVehicle(@PathParam("id") Long id, VehicleUpdateRequest updateDTO) {
+        
         Vehicle updated = vehicleUpdateUseCase.updateVehicle(
                 id, 
                 updateDTO.getModel(), 

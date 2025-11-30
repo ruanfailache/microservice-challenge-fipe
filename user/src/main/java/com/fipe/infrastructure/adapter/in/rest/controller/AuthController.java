@@ -2,9 +2,13 @@ package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
 import com.fipe.infrastructure.security.JwtAuthenticationService;
-import jakarta.annotation.security.Authenticated;
+import com.fipe.domain.model.User;
+import com.fipe.domain.port.in.usecase.GetUserUseCase;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -16,10 +20,16 @@ import jakarta.ws.rs.core.Response;
 @Path("/api/v1/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AuthenticationController implements AuthenticationApi {
+public class AuthController implements AuthenticationApi {
     
     @Inject
     JwtAuthenticationService jwtAuthenticationService;
+    
+    @Inject
+    GetUserUseCase getUserUseCase;
+    
+    @Inject
+    JsonWebToken jwt;
     
     @POST
     @Path("/login")
@@ -44,7 +54,10 @@ public class AuthenticationController implements AuthenticationApi {
     @Path("/validate-token")
     @Authenticated
     public Response validateToken() {
-        // If the request reaches here, the token is valid
-        return Response.ok().build();
+        // Get username from JWT
+        String username = jwt.getName();
+        // Fetch user details
+        User user = getUserUseCase.getByUsername(username);
+        return Response.ok(UserResponse.fromDomain(user)).build();
     }
 }
