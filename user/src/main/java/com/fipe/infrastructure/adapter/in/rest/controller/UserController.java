@@ -12,6 +12,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.UpdateUserRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
+import com.fipe.infrastructure.adapter.in.rest.openapi.UserApi;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -48,16 +50,15 @@ public class UserController implements UserApi {
     UserResponseMapper userResponseMapper;
     
     @POST
-    @RolesAllowed({"ADMIN"})
     public Response createUser(CreateUserRequest request) {
         Role role = request.role() != null ? Role.fromString(request.role()) : Role.USER;
         
         User user = createUserUseCase.execute(
-            new CreateUserUseCase.CreateUserRequest(
+            new CreateUserRequest(
                 request.username(),
                 request.email(),
                 request.password(),
-                role
+                role.getName()
             )
         );
         

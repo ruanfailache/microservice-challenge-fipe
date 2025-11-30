@@ -40,7 +40,9 @@ public class AuthenticateUserUseCaseImpl implements AuthenticateUserUseCase {
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new AuthenticationException("Invalid credentials");
         }
-        
+
+        LOG.infof(user.toString());
+
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.update(user);
         

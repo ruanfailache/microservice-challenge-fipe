@@ -36,11 +36,7 @@ quarkus:
     console:
       format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
 
-mp:
+smallrye:
   jwt:
-    verify:
-      issuer: https://fipe-issuer
-      publickey:
-        algorithm: RS256
     sign:
-      key-location: /privateKey.pem
+      key: ${JWT_SECRET}

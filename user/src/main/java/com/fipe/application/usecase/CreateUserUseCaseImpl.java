@@ -5,6 +5,7 @@ import com.fipe.domain.exception.ValidationException;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.CreateUserUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
 import com.fipe.infrastructure.security.PasswordEncoder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -32,8 +33,9 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
         checkDuplicates(request);
         
         String encodedPassword = passwordEncoder.encode(request.password());
-        Role role = request.role() != null ? request.role() : Role.USER;
-        
+
+        Role role = request.role() == null ? Role.USER : Role.fromString(request.role());
+
         User user = new User(
             request.username(),
             request.email(),

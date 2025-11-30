@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "FIPE Microservices",
-    "description": "Postman collection for FIPE microservices API endpoints",
+    "description": "Postman collection for FIPE microservices API endpoints. Note: The user service seeds default users on startup: admin (password: 123456), manager (password: 123456), user (password: 123456). Use the admin user for authentication in protected endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -282,7 +282,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+                  "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}"
                 },
                 "url": {
                   "raw": "{{baseUrl_user}}/api/v1/auth/login",

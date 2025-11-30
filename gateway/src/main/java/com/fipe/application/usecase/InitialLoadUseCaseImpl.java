@@ -1,6 +1,8 @@
 package com.fipe.application.usecase;
 
+import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Brand;
+import com.fipe.domain.port.in.usecase.BrandQueryUseCase;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.domain.port.out.publisher.VehicleDataPublisherPort;
@@ -21,6 +23,9 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     
     @Inject
     VehicleDataPublisherPort vehicleDataPublisherPort;
+
+    @Inject
+    BrandQueryUseCase brandQueryUseCase;
     
     @Override
     @Transactional
@@ -40,8 +45,13 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
 
         for (Brand brand : brands) {
             try {
-                vehicleDataPublisherPort.publishBrandForProcessing(brand);
-                processedCount++;
+                boolean isBrandRegistered = brandQueryUseCase.existsBrandByCode(brand.getCode());
+                if (!isBrandRegistered) {
+                    vehicleDataPublisherPort.publishBrandForProcessing(brand);
+                    processedCount++;
+                } else {
+                    LOG.warnf("Brand \"%s\" is already registered", brand.getCode());
+                }
             } catch (Exception e) {
                 LOG.errorf(e, "Failed to publish brand: %s", brand.getCode());
             }

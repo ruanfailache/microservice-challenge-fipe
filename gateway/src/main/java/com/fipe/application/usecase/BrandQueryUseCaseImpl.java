@@ -34,4 +34,8 @@ public class BrandQueryUseCaseImpl implements BrandQueryUseCase {
     public Brand getBrandByCode(String code) {
         return brandRepositoryPort.findByCode(code).orElseThrow(() -> new NotFoundException("Brand", code));
     }
+
+    public boolean existsBrandByCode(String code) {
+        return brandRepositoryPort.findByCode(code).isPresent();
+    }
 }

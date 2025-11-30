@@ -12,7 +12,9 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "lastLoginAt", ignore = true)
-    UserEntity toEntity(User user);
+    UserEntity toEntityOnCreate(User user);
     
+    UserEntity toEntity(User user);
+
     User toDomain(UserEntity entity);
 }

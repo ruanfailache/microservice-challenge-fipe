@@ -28,7 +28,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     @Override
     @Transactional
     public User save(User user) {
-        UserEntity entity = userMapper.toEntity(user);
+        UserEntity entity = userMapper.toEntityOnCreate(user);
         userRepository.persist(entity);
         return userMapper.toDomain(entity);
     }
