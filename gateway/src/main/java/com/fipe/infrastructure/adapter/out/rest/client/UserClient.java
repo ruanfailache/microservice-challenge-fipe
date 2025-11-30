@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.out.rest.client;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
-import com.fipe.infrastructure.adapter.out.rest.request.UserAuthenticationRequest;
 import com.fipe.infrastructure.adapter.out.rest.response.UserServiceResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
