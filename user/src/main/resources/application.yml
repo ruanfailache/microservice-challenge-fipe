@@ -39,4 +39,5 @@ quarkus:
 smallrye:
   jwt:
     sign:
-      key: ${JWT_SECRET}
+      key:
+        location: privateKey.pem

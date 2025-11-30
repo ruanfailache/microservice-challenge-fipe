@@ -102,7 +102,6 @@ services:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/fipe_user
       QUARKUS_DATASOURCE_USERNAME: fipe
       QUARKUS_DATASOURCE_PASSWORD: fipe
-      JWT_SECRET: my-super-secret-key
     networks:
       - fipe-net
     restart: unless-stopped
@@ -127,7 +126,6 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       QUARKUS_REST_CLIENT_FIPE_API_URL: https://parallelum.com.br/fipe/api/v1
       QUARKUS_REST_CLIENT_USER_SERVICE_URL: http://user:8082
-      JWT_SECRET: my-super-secret-key
     networks:
       - fipe-net
     restart: unless-stopped

@@ -41,8 +41,6 @@ public class AuthenticateUserUseCaseImpl implements AuthenticateUserUseCase {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        LOG.infof(user.toString());
-
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.update(user);
         
