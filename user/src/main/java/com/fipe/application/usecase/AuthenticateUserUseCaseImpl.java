@@ -6,7 +6,8 @@ import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.AuthenticateUserUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
-import com.fipe.infrastructure.security.PasswordEncoder;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
+import com.fipe.infrastructure.security.service.PasswordEncoderService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -25,10 +26,10 @@ public class AuthenticateUserUseCaseImpl implements AuthenticateUserUseCase {
     UserRepositoryPort userRepository;
     
     @Inject
-    PasswordEncoder passwordEncoder;
+    PasswordEncoderService passwordEncoderService;
     
     @Override
-    public User execute(AuthenticationRequest request) {
+    public User execute(LoginRequest request) {
         User user = userRepository.findByUsername(request.username())
             .orElseThrow(() -> new NotFoundException("User not found: " + request.username()));
         
@@ -36,7 +37,7 @@ public class AuthenticateUserUseCaseImpl implements AuthenticateUserUseCase {
             throw new AuthenticationException("User account is inactive");
         }
         
-        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+        if (!passwordEncoderService.matches(request.password(), user.getPasswordHash())) {
             throw new AuthenticationException("Invalid credentials");
         }
 

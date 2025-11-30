@@ -6,10 +6,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-/**
- * REST client for User Service
- * Handles both authentication and user management operations
- */
 @RegisterRestClient(configKey = "user-service")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

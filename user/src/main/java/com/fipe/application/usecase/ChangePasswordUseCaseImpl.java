@@ -7,7 +7,7 @@ import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.ChangePasswordUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.ChangePasswordRequest;
-import com.fipe.infrastructure.security.PasswordEncoder;
+import com.fipe.infrastructure.security.service.PasswordEncoderService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -23,7 +23,7 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     UserRepositoryPort userRepository;
     
     @Inject
-    PasswordEncoder passwordEncoder;
+    PasswordEncoderService passwordEncoderService;
     
     public void execute(Long id, ChangePasswordRequest request) {
         LOG.infof("Changing password for user: %d", id);
@@ -33,11 +33,11 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("User not found: " + id));
         
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+        if (!passwordEncoderService.matches(request.currentPassword(), user.getPasswordHash())) {
             throw new AuthenticationException("Current password is incorrect");
         }
         
-        String newPasswordHash = passwordEncoder.encode(request.newPassword());
+        String newPasswordHash = passwordEncoderService.encode(request.newPassword());
         user.setPasswordHash(newPasswordHash);
         user.setUpdatedAt(LocalDateTime.now());
         

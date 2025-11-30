@@ -6,7 +6,7 @@ import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.CreateUserUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
-import com.fipe.infrastructure.security.PasswordEncoder;
+import com.fipe.infrastructure.security.service.PasswordEncoderService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -23,7 +23,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     UserRepositoryPort userRepository;
     
     @Inject
-    PasswordEncoder passwordEncoder;
+    PasswordEncoderService passwordEncoderService;
     
     @Override
     public User execute(CreateUserRequest request) {
@@ -32,7 +32,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
         validateRequest(request);
         checkDuplicates(request);
         
-        String encodedPassword = passwordEncoder.encode(request.password());
+        String encodedPassword = passwordEncoderService.encode(request.password());
 
         Role role = request.role() == null ? Role.USER : Role.fromString(request.role());
 

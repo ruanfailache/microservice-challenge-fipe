@@ -1,9 +1,11 @@
-package com.fipe.infrastructure.security;
+package com.fipe.infrastructure.security.service;
 
 import com.fipe.domain.enums.Role;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.AuthenticateUserUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,21 +27,18 @@ public class JwtAuthenticationService {
     @Inject
     AuthenticateUserUseCase authenticateUserUseCase;
     
-    public record AuthenticationResult(String token, String role) {}
-    
-    public AuthenticationResult authenticate(String username, String password) {
-        LOG.infof("Authenticating user: %s", username);
-        AuthenticationRequest authRequest = new AuthenticationRequest(username, password);
-        User user = authenticateUserUseCase.execute(authRequest);
-        String token = generateToken(username, user.getRole());
-        return new AuthenticationResult(token, user.getRole().getName());
+    public LoginResponse authenticate(LoginRequest request) {
+        LOG.infof("Authenticating user: %s", request.username());
+        User user = authenticateUserUseCase.execute(request);
+        String token = generateToken(request.username(), user.getRole());
+        return new LoginResponse(token, user.getUsername(), user.getRole().getName());
     }
     
     private String generateToken(String username, Role role) {
-        String roleName = role != null ? role.getName() : "USER";
+        Role validatedRole = role != null ? role : Role.USER;
         return Jwt.issuer(issuer)
                 .upn(username)
-                .groups(Set.of(roleName))
+                .groups(Set.of(validatedRole.getName()))
                 .expiresIn(TOKEN_DURATION)
                 .sign();
     }

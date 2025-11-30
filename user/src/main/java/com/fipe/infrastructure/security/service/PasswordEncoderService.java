@@ -1,4 +1,4 @@
-package com.fipe.infrastructure.security;
+package com.fipe.infrastructure.security.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @ApplicationScoped
-public class PasswordEncoder {
+public class PasswordEncoderService {
     
     private static final int SALT_LENGTH = 16;
     private static final String ALGORITHM = "SHA-256";
