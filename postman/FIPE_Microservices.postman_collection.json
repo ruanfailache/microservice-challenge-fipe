@@ -7,6 +7,16 @@
   "item": [
     {
       "name": "Gateway",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{jwtToken}}",
+            "type": "string"
+          }
+        ]
+      },
       "item": [
         {
           "name": "Brands",
@@ -72,10 +82,6 @@
                   {
                     "key": "Content-Type",
                     "value": "application/json"
-                  },
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{jwtToken}}"
                   }
                 ],
                 "body": {
@@ -98,12 +104,7 @@
               "name": "Trigger Initial Load",
               "request": {
                 "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{jwtToken}}"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl_gateway}}/api/v1/initial-load",
                   "host": ["{{baseUrl_gateway}}"],
@@ -117,6 +118,16 @@
     },
     {
       "name": "Processor",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{jwtToken}}",
+            "type": "string"
+          }
+        ]
+      },
       "item": [
         {
           "name": "Failures",
@@ -125,12 +136,7 @@
               "name": "Get Failures by Status",
               "request": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{jwtToken}}"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl_processor}}/api/failures/status/{{status}}",
                   "host": ["{{baseUrl_processor}}"],
@@ -252,6 +258,16 @@
     },
     {
       "name": "User",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{jwtToken}}",
+            "type": "string"
+          }
+        ]
+      },
       "item": [
         {
           "name": "Auth",
@@ -273,6 +289,9 @@
                 }
               ],
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "POST",
                 "header": [
                   {
@@ -295,12 +314,7 @@
               "name": "Validate Token",
               "request": {
                 "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{jwtToken}}"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl_user}}/api/v1/auth/validate-token",
                   "host": ["{{baseUrl_user}}"],
@@ -321,10 +335,6 @@
                   {
                     "key": "Content-Type",
                     "value": "application/json"
-                  },
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{jwtToken}}"
                   }
                 ],
                 "body": {

@@ -6,6 +6,7 @@ import com.fipe.domain.exception.ValidationException;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.ChangePasswordUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.ChangePasswordRequest;
 import com.fipe.infrastructure.security.PasswordEncoder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -13,9 +14,6 @@ import org.jboss.logging.Logger;
 
 import java.time.LocalDateTime;
 
-/**
- * Implementation of ChangePasswordUseCase
- */
 @ApplicationScoped
 public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     
@@ -27,7 +25,6 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     @Inject
     PasswordEncoder passwordEncoder;
     
-    @Override
     public void execute(Long id, ChangePasswordRequest request) {
         LOG.infof("Changing password for user: %d", id);
         

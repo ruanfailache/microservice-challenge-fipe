@@ -20,12 +20,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
-/**
- * REST controller for User CRUD operations
- */
 @Path("/api/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,8 +44,9 @@ public class UserController implements UserApi {
     
     @Inject
     UserResponseMapper userResponseMapper;
-    
+
     @POST
+    @RolesAllowed({"ADMIN"})
     public Response createUser(CreateUserRequest request) {
         Role role = request.role() != null ? Role.fromString(request.role()) : Role.USER;
         
@@ -75,9 +72,9 @@ public class UserController implements UserApi {
         
         User user = updateUserUseCase.execute(
             id,
-            new UpdateUserUseCase.UpdateUserRequest(
+            new UpdateUserRequest(
                 request.email(),
-                role,
+                role.getName(),
                 request.active()
             )
         );
@@ -126,12 +123,11 @@ public class UserController implements UserApi {
     public Response changePassword(@PathParam("id") Long id, ChangePasswordRequest request) {
         changePasswordUseCase.execute(
             id,
-            new ChangePasswordUseCase.ChangePasswordRequest(
+            new ChangePasswordRequest(
                 request.currentPassword(),
                 request.newPassword()
             )
         );
-        
         return Response.noContent().build();
     }
 }

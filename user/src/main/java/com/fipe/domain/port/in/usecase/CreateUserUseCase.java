@@ -3,9 +3,6 @@ package com.fipe.domain.port.in.usecase;
 import com.fipe.domain.model.User;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
 
-/**
- * Use case for creating a new user
- */
 public interface CreateUserUseCase {
     
     /**

@@ -1,10 +1,8 @@
 package com.fipe.domain.port.in.usecase;
 
 import com.fipe.domain.model.User;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
 
-/**
- * Use case for authenticating users
- */
 public interface AuthenticateUserUseCase {
     
     /**
@@ -14,12 +12,4 @@ public interface AuthenticateUserUseCase {
      * @return the authenticated user
      */
     User execute(AuthenticationRequest request);
-    
-    /**
-     * Request object for authenticating a user
-     */
-    record AuthenticationRequest(
-        String username,
-        String password
-    ) {}
 }

@@ -1,8 +1,7 @@
 package com.fipe.domain.port.in.usecase;
 
-/**
- * Use case for changing user password
- */
+import com.fipe.infrastructure.adapter.in.rest.dto.request.ChangePasswordRequest;
+
 public interface ChangePasswordUseCase {
     
     /**
@@ -12,12 +11,4 @@ public interface ChangePasswordUseCase {
      * @param request the password change request
      */
     void execute(Long id, ChangePasswordRequest request);
-    
-    /**
-     * Request object for changing password
-     */
-    record ChangePasswordRequest(
-        String currentPassword,
-        String newPassword
-    ) {}
 }

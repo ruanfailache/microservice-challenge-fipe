@@ -3,6 +3,7 @@ package com.fipe.infrastructure.security;
 import com.fipe.domain.enums.Role;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.AuthenticateUserUseCase;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,17 +29,14 @@ public class JwtAuthenticationService {
     
     public AuthenticationResult authenticate(String username, String password) {
         LOG.infof("Authenticating user: %s", username);
-        User user = authenticateUserUseCase.execute(
-            new AuthenticateUserUseCase.AuthenticationRequest(username, password)
-        );
-        LOG.infof("User authenticated successfully: %s", username);
+        AuthenticationRequest authRequest = new AuthenticationRequest(username, password);
+        User user = authenticateUserUseCase.execute(authRequest);
         String token = generateToken(username, user.getRole());
         return new AuthenticationResult(token, user.getRole().getName());
     }
     
     private String generateToken(String username, Role role) {
         String roleName = role != null ? role.getName() : "USER";
-        
         return Jwt.issuer(issuer)
                 .upn(username)
                 .groups(Set.of(roleName))

@@ -1,19 +1,18 @@
 package com.fipe.application.usecase;
 
+import com.fipe.domain.enums.Role;
 import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.exception.ValidationException;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.UpdateUserUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.UpdateUserRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import java.time.LocalDateTime;
 
-/**
- * Implementation of UpdateUserUseCase
- */
 @ApplicationScoped
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     
@@ -36,7 +35,8 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
         }
         
         if (request.role() != null) {
-            user.setRole(request.role());
+            Role role = Role.fromString(request.role());
+            user.setRole(role);
         }
         
         if (request.active() != null) {

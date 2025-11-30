@@ -1,8 +1,5 @@
 package com.fipe.domain.port.in.usecase;
 
-/**
- * Use case for deleting a user
- */
 public interface DeleteUserUseCase {
     
     /**

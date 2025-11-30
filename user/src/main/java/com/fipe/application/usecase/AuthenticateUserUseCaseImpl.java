@@ -5,6 +5,7 @@ import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.AuthenticateUserUseCase;
 import com.fipe.domain.port.out.UserRepositoryPort;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
 import com.fipe.infrastructure.security.PasswordEncoder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,8 +29,6 @@ public class AuthenticateUserUseCaseImpl implements AuthenticateUserUseCase {
     
     @Override
     public User execute(AuthenticationRequest request) {
-        LOG.infof("Authenticating user: %s", request.username());
-        
         User user = userRepository.findByUsername(request.username())
             .orElseThrow(() -> new NotFoundException("User not found: " + request.username()));
         

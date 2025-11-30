@@ -4,9 +4,6 @@ import com.fipe.domain.model.User;
 
 import java.util.List;
 
-/**
- * Use case for querying users
- */
 public interface GetUserUseCase {
     
     /**
