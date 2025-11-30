@@ -17,8 +17,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +27,7 @@ import java.util.stream.Collectors;
 @Path("/api/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Users", description = "User management operations")
-public class UserController {
+public class UserController implements UserApi {
     
     @Inject
     CreateUserUseCase createUserUseCase;
@@ -52,7 +49,6 @@ public class UserController {
     
     @POST
     @RolesAllowed({"ADMIN"})
-    @Operation(summary = "Create a new user", description = "Creates a new user with the provided details. Requires ADMIN role.")
     public Response createUser(CreateUserRequest request) {
         Role role = request.role() != null ? Role.fromString(request.role()) : Role.USER;
         
@@ -73,7 +69,6 @@ public class UserController {
     @PUT
     @Path("/{id}")
     @RolesAllowed({"ADMIN"})
-    @Operation(summary = "Update a user", description = "Updates an existing user. Requires ADMIN role.")
     public Response updateUser(@PathParam("id") Long id, UpdateUserRequest request) {
         Role role = request.role() != null ? Role.fromString(request.role()) : null;
         
@@ -92,7 +87,6 @@ public class UserController {
     @GET
     @Path("/{id}")
     @RolesAllowed({"ADMIN", "MANAGER"})
-    @Operation(summary = "Get user by ID", description = "Retrieves a user by their ID. Requires ADMIN or MANAGER role.")
     public Response getUserById(@PathParam("id") Long id) {
         User user = getUserUseCase.getById(id);
         return Response.ok(userResponseMapper.toResponse(user)).build();
@@ -101,7 +95,6 @@ public class UserController {
     @GET
     @Path("/username/{username}")
     @RolesAllowed({"ADMIN", "MANAGER"})
-    @Operation(summary = "Get user by username", description = "Retrieves a user by their username. Requires ADMIN or MANAGER role.")
     public Response getUserByUsername(@PathParam("username") String username) {
         User user = getUserUseCase.getByUsername(username);
         return Response.ok(userResponseMapper.toResponse(user)).build();
@@ -109,7 +102,6 @@ public class UserController {
     
     @GET
     @RolesAllowed({"ADMIN", "MANAGER"})
-    @Operation(summary = "Get all users", description = "Retrieves all users. Requires ADMIN or MANAGER role.")
     public Response getAllUsers(@QueryParam("activeOnly") @DefaultValue("false") boolean activeOnly) {
         List<User> users = activeOnly ? getUserUseCase.getAllActive() : getUserUseCase.getAll();
         List<UserResponse> response = users.stream()
@@ -122,7 +114,6 @@ public class UserController {
     @DELETE
     @Path("/{id}")
     @RolesAllowed({"ADMIN"})
-    @Operation(summary = "Delete a user", description = "Deletes a user by their ID. Requires ADMIN role.")
     public Response deleteUser(@PathParam("id") Long id) {
         deleteUserUseCase.execute(id);
         return Response.noContent().build();
@@ -131,7 +122,6 @@ public class UserController {
     @PUT
     @Path("/{id}/password")
     @RolesAllowed({"ADMIN", "MANAGER", "USER"})
-    @Operation(summary = "Change user password", description = "Changes the password for a user. Users can change their own password.")
     public Response changePassword(@PathParam("id") Long id, ChangePasswordRequest request) {
         changePasswordUseCase.execute(
             id,

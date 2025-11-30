@@ -1,11 +1,8 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
-import com.fipe.infrastructure.adapter.in.rest.openapi.AuthenticationApi;
-import com.fipe.infrastructure.security.JwtAuthenticationService;
 import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.GetUserUseCase;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -21,7 +18,9 @@ import jakarta.ws.rs.core.Response;
 @Path("/api/v1/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AuthController implements AuthenticationApi {
+public class AuthController implements AuthApi {
+    
+    private static final long TOKEN_EXPIRATION_SECONDS = 86400; // 24 hours
     
     @Inject
     JwtAuthenticationService jwtAuthenticationService;
@@ -48,7 +47,7 @@ public class AuthController implements AuthenticationApi {
                 authResult.token(),
                 request.getUsername(),
                 authResult.role(),
-                86400 // 24 hours in seconds
+                TOKEN_EXPIRATION_SECONDS
         );
         
         return Response.ok(response).build();
@@ -58,9 +57,7 @@ public class AuthController implements AuthenticationApi {
     @Path("/validate-token")
     @Authenticated
     public Response validateToken() {
-        // Get username from JWT
         String username = jwt.getName();
-        // Fetch user details
         User user = getUserUseCase.getByUsername(username);
         return Response.ok(userResponseMapper.toResponse(user)).build();
     }

@@ -1,0 +1,470 @@
+{
+  "info": {
+    "name": "FIPE Microservices",
+    "description": "Postman collection for FIPE microservices API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Gateway",
+      "item": [
+        {
+          "name": "Brands",
+          "item": [
+            {
+              "name": "Get All Brands",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/brands",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "brands"]
+                }
+              }
+            },
+            {
+              "name": "Get Brand by Code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/brands/{{brandCode}}",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "brands", "{{brandCode}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Vehicles",
+          "item": [
+            {
+              "name": "Get Vehicles by Brand",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/brand/{{brandCode}}",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "vehicles", "brand", "{{brandCode}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Vehicle by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/{{vehicleId}}",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "vehicles", "{{vehicleId}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Vehicle",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"model\": \"Updated Model\",\n  \"observations\": \"Updated observations\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/{{vehicleId}}",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "vehicles", "{{vehicleId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Initial Load",
+          "item": [
+            {
+              "name": "Trigger Initial Load",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_gateway}}/api/v1/initial-load",
+                  "host": ["{{baseUrl_gateway}}"],
+                  "path": ["api", "v1", "initial-load"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Processor",
+      "item": [
+        {
+          "name": "Failures",
+          "item": [
+            {
+              "name": "Get Failures by Status",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/status/{{status}}",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "status", "{{status}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Failure by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/{{failureId}}",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "{{failureId}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Failures by Brand",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/brand/{{brandCode}}",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "brand", "{{brandCode}}"]
+                }
+              }
+            },
+            {
+              "name": "Mark Failure for Retry",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/{{failureId}}/retry",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "{{failureId}}", "retry"]
+                }
+              }
+            },
+            {
+              "name": "Mark Failure as Resolved",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/{{failureId}}/resolve",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "{{failureId}}", "resolve"]
+                }
+              }
+            },
+            {
+              "name": "Get Failure Statistics",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/statistics",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "statistics"]
+                }
+              }
+            },
+            {
+              "name": "Cleanup Failures",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/failures/cleanup?days=30",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "failures", "cleanup"],
+                  "query": [
+                    {
+                      "key": "days",
+                      "value": "30"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Login successful\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.environment.set(\"jwtToken\", \"Bearer \" + jsonData.token);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/v1/auth/login",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              }
+            },
+            {
+              "name": "Validate Token",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/v1/auth/validate-token",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "v1", "auth", "validate-token"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Create User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users"]
+                }
+              }
+            },
+            {
+              "name": "Update User",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"updated@example.com\",\n  \"role\": \"USER\",\n  \"active\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users/{{userId}}",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users", "{{userId}}"]
+                }
+              }
+            },
+            {
+              "name": "Get User by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users/{{userId}}",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users", "{{userId}}"]
+                }
+              }
+            },
+            {
+              "name": "Get User by Username",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users/username/{{username}}",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users", "username", "{{username}}"]
+                }
+              }
+            },
+            {
+              "name": "Get All Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users?activeOnly=false",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users"],
+                  "query": [
+                    {
+                      "key": "activeOnly",
+                      "value": "false"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete User",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users/{{userId}}",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users", "{{userId}}"]
+                }
+              }
+            },
+            {
+              "name": "Change Password",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwtToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currentPassword\": \"oldpassword\",\n  \"newPassword\": \"newpassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_user}}/api/users/{{userId}}/password",
+                  "host": ["{{baseUrl_user}}"],
+                  "path": ["api", "users", "{{userId}}", "password"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

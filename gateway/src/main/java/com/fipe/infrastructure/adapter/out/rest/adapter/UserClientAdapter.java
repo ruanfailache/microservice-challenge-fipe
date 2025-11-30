@@ -4,7 +4,6 @@ import com.fipe.domain.enums.Role;
 import com.fipe.domain.exception.AuthenticationException;
 import com.fipe.domain.port.out.client.UserClientPort;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
-import com.fipe.infrastructure.adapter.out.rest.request.UserAuthenticationRequest;
 import com.fipe.infrastructure.adapter.out.rest.response.UserServiceResponse;
 import com.fipe.infrastructure.adapter.out.rest.client.UserClient;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -34,28 +33,6 @@ public class UserClientAdapter implements UserClientPort {
         } catch (Exception e) {
             LOG.warnf("Token validation failed: %s", e.getMessage());
             throw new AuthenticationException("Invalid or expired token", e);
-        }
-    }
-    
-    @Override
-    public Role validateCredentials(String username, String password) {
-        try {
-            LOG.infof("Validating credentials for user: %s", username);
-            
-            UserServiceResponse response = userClient.validateCredentials(
-                new UserAuthenticationRequest(username, password)
-            );
-            
-            if (!response.isActive()) {
-                throw new AuthenticationException("User account is inactive");
-            }
-            
-            LOG.infof("Successfully validated credentials for user: %s", username);
-            return Role.fromString(response.getRole());
-            
-        } catch (Exception e) {
-            LOG.errorf(e, "Failed to validate credentials for user: %s", username);
-            throw new AuthenticationException("Invalid credentials");
         }
     }
     

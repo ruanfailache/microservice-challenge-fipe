@@ -16,16 +16,6 @@ public interface UserClientPort {
     UserResponse validateToken(String authorization);
     
     /**
-     * Validate user credentials via user service
-     * 
-     * @param username the username
-     * @param password the password
-     * @return the user's role if authentication is successful
-     * @throws com.fipe.domain.exception.AuthenticationException if authentication fails
-     */
-    Role validateCredentials(String username, String password);
-    
-    /**
      * Get user by username
      * 
      * @param username the username

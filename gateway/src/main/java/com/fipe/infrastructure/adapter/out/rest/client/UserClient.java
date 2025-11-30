@@ -24,13 +24,6 @@ public interface UserClient {
     UserResponse validateToken(@HeaderParam("Authorization") String authorization);
     
     /**
-     * Validate user credentials
-     */
-    @POST
-    @Path("/api/users/validate")
-    UserServiceResponse validateCredentials(UserAuthenticationRequest request);
-    
-    /**
      * Get user by username
      */
     @GET

@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.request.LoginRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.AuthenticationRequest;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -13,7 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.LoginResponse;
 
 @Tag(name = "Authentication", description = "Authentication operations")
-public interface AuthenticationApi {
+public interface AuthApi {
     
     @Operation(summary = "Login", description = "Authenticate and receive JWT token")
     @APIResponses(value = {
@@ -28,4 +27,18 @@ public interface AuthenticationApi {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     Response login(LoginRequest request);
+    
+    @Operation(summary = "Validate JWT token", description = "Validates the provided JWT token and returns user details")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Token is valid",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse.class))),
+            @APIResponse(responseCode = "401", description = "Invalid or expired token",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ErrorResponse.class))),
+            @APIResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    Response validateToken();
 }
