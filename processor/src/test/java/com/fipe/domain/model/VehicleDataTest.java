@@ -15,7 +15,7 @@ class VehicleDataTest {
         String model = "Palio 1.0";
         
         // When
-        VehicleData vehicleData = new VehicleData(brandCode, brandName, code, model);
+        VehicleData vehicleData = new VehicleData(null, brandCode, brandName, code, model, null, null, null);
         
         // Then
         assertNotNull(vehicleData);
@@ -31,21 +31,21 @@ class VehicleDataTest {
     void shouldThrowExceptionWhenBrandCodeIsNull() {
         // When & Then
         assertThrows(NullPointerException.class, 
-                () -> new VehicleData(null, "Fiat", "001", "Palio"));
+                () -> new VehicleData(null, null, "Fiat", "001", "Palio", null, null, null));
     }
     
     @Test
     void shouldThrowExceptionWhenCodeIsNull() {
         // When & Then
         assertThrows(NullPointerException.class, 
-                () -> new VehicleData("1", "Fiat", null, "Palio"));
+                () -> new VehicleData(null, "1", "Fiat", null, "Palio", null, null, null));
     }
     
     @Test
     void shouldBeEqualWhenBrandCodeAndCodeAreTheSame() {
         // Given
-        VehicleData data1 = new VehicleData("1", "Fiat", "001", "Palio 1.0");
-        VehicleData data2 = new VehicleData("1", "Fiat", "001", "Palio 1.4");
+        VehicleData data1 = new VehicleData(null, "1", "Fiat", "001", "Palio 1.0", null, null, null);
+        VehicleData data2 = new VehicleData(null, "1", "Fiat", "001", "Palio 1.4", null, null, null);
         
         // When & Then
         assertEquals(data1, data2);

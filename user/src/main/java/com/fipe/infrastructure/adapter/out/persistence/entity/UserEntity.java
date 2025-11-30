@@ -57,6 +57,4 @@ public class UserEntity extends PanacheEntityBase {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    
-    // Getters and Setters
 }

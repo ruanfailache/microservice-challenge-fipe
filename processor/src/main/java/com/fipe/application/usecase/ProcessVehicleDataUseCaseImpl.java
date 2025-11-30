@@ -53,10 +53,14 @@ public class ProcessVehicleDataUseCaseImpl implements ProcessVehicleDataUseCase 
                 }
                 
                 VehicleData vehicleData = new VehicleData(
+                        null,
                         brandCode,
                         brandName,
                         model.getCode(),
-                        model.getName()
+                        model.getName(),
+                        null,
+                        null,
+                        null
                 );
                 
                 vehicleDataRepositoryPort.save(vehicleData);
