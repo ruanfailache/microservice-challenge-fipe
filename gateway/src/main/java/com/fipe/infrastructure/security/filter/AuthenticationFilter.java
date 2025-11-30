@@ -12,8 +12,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import org.jboss.logging.Logger;
 
-import java.io.IOException;
-
 @Provider
 @Priority(1000)
 @ApplicationScoped
@@ -27,14 +25,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
         String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            LOG.warn("Missing or invalid Authorization header");
-            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-            return;
-        }
-        String token = authorization.replace("Bearer ", "").trim();
         try {
-            UserResponse user = userClientPort.validateToken(token);
+            UserResponse user = userClientPort.getCurrentUser(authorization);
             requestContext.setProperty("authenticatedUser", user);
         } catch (Exception e) {
             LOG.warnf("Token validation failed: %s", e.getMessage());

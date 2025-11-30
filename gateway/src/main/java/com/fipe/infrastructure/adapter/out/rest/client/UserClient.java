@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.out.rest.client;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
-import com.fipe.infrastructure.adapter.out.rest.response.UserServiceResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
@@ -11,25 +10,8 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface UserClient {
     
-    /**
-     * Validate JWT token
-     */
     @POST
-    @Path("/api/v1/auth/validate-token")
-    UserResponse validateToken(@HeaderParam("Authorization") String authorization);
-    
-    /**
-     * Get user by username
-     */
-    @GET
-    @Path("/api/users/username/{username}")
-    UserServiceResponse getUserByUsername(@PathParam("username") String username);
-    
-    /**
-     * Get user by ID
-     */
-    @GET
-    @Path("/api/users/{id}")
-    UserServiceResponse getUserById(@PathParam("id") Long id);
+    @Path("/api/v1/auth/current-user")
+    UserResponse getCurrentUser(@HeaderParam("Authorization") String authorization);
 }
 

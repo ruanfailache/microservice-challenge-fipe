@@ -26,14 +26,9 @@ public class UserServiceAuthFilter implements ContainerRequestFilter {
     
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
-        }
-        
+        String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         try {
-            UserResponse user = userClientPort.validateToken(authHeader);
+            UserResponse user = userClientPort.getCurrentUser(authorization);
             requestContext.setProperty("authenticatedUser", user);
             LOG.debugf("Token validated for user: %s with role: %s", user.username(), user.role());
         } catch (Exception e) {

@@ -32,9 +32,6 @@ public class KafkaVehicleDataPublisher implements VehicleDataPublisherPort {
                     .build();
             
             emitter.send(Message.of(message).addMetadata(metadata));
-            
-            LOG.infof("Published brand for processing: %s - %s", brand.getCode(), brand.getName());
-            
         } catch (Exception e) {
             LOG.errorf(e, "Error publishing brand for processing: %s", brand.getCode());
             throw new MessagingException("Failed to publish brand for processing", e);

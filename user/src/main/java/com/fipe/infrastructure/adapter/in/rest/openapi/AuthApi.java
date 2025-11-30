@@ -41,5 +41,5 @@ public interface AuthApi {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
-    Response validateToken();
+    Response currentUser();
 }

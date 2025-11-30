@@ -16,7 +16,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.jboss.logging.Logger;
 
 @Path("/api/v1/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -43,9 +42,9 @@ public class AuthController implements AuthApi {
     }
 
     @POST
-    @Path("/validate-token")
+    @Path("/current-user")
     @Authenticated
-    public Response validateToken() {
+    public Response currentUser() {
         String username = jwt.getName();
         User user = getUserUseCase.getByUsername(username);
         UserResponse response = userResponseMapper.toResponse(user);

@@ -6,17 +6,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-/**
- * REST client for User Service
- * Handles token validation operations
- */
 @RegisterRestClient(configKey = "user-service")
 public interface UserClient {
     
-    /**
-     * Validate JWT token
-     */
     @POST
-    @Path("/api/v1/auth/validate-token")
-    UserResponse validateToken(@HeaderParam("Authorization") String authorization);
+    @Path("/api/v1/auth/current-user")
+    UserResponse getCurrentUser(@HeaderParam("Authorization") String authorization);
 }

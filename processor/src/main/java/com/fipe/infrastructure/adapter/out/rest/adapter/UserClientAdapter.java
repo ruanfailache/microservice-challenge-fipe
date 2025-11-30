@@ -9,9 +9,6 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-/**
- * Adapter for user client operations (token validation)
- */
 @ApplicationScoped
 public class UserClientAdapter implements UserClientPort {
     
@@ -22,10 +19,9 @@ public class UserClientAdapter implements UserClientPort {
     UserClient userClient;
     
     @Override
-    public UserResponse validateToken(String authorization) {
+    public UserResponse getCurrentUser(String authorization) {
         try {
-            LOG.debug("Validating token with user service");
-            UserResponse user = userClient.validateToken(authorization);
+            UserResponse user = userClient.getCurrentUser(authorization);
             LOG.debugf("Token validated successfully for user: %s", user.username());
             return user;
         } catch (Exception e) {

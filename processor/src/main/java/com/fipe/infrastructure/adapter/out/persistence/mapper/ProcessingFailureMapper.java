@@ -1,6 +1,5 @@
 package com.fipe.infrastructure.adapter.out.persistence.mapper;
 
-import com.fipe.domain.enums.FailureStatus;
 import com.fipe.domain.model.ProcessingFailure;
 import com.fipe.infrastructure.adapter.out.persistence.entity.ProcessingFailureEntity;
 import org.mapstruct.Mapper;
@@ -9,9 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface ProcessingFailureMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "lastAttemptAt", ignore = true)
     @Mapping(target = "status", expression = "java(domain.getStatus() != null ? domain.getStatus().name() : null)")
     ProcessingFailureEntity toEntity(ProcessingFailure domain);
 

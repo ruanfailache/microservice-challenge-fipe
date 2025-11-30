@@ -3,6 +3,8 @@ package com.fipe.infrastructure.adapter.in.messaging.consumer;
 import com.fipe.domain.port.in.usecase.ProcessVehicleDataUseCase;
 import com.fipe.infrastructure.adapter.in.messaging.message.VehicleDataMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.smallrye.common.annotation.Blocking;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import io.smallrye.reactive.messaging.kafka.api.IncomingKafkaRecordMetadata;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,18 +25,16 @@ public class VehicleDataConsumer {
     ProcessVehicleDataUseCase useCase;
     
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Incoming("vehicle-data-in")
+    @RunOnVirtualThread
     @Retry(maxRetries = 3, delay = 5, delayUnit = ChronoUnit.SECONDS, jitter = 1000)
     public CompletionStage<Void> consume(Message<String> message) {
         try {
             VehicleDataMessage data = objectMapper.readValue(message.getPayload(), VehicleDataMessage.class);
             logMessageReceived(message, data);
-            
             useCase.processVehicleData(data.getBrandCode(), data.getBrandName());
-            LOG.infof("Processed brand: %s", data.getBrandCode());
             return message.ack();
-            
         } catch (Exception e) {
             LOG.errorf(e, "Failed processing message: %s", message.getPayload());
             return message.nack(e);

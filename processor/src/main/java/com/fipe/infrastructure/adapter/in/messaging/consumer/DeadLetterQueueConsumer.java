@@ -1,10 +1,11 @@
 package com.fipe.infrastructure.adapter.in.messaging.consumer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fipe.domain.enums.FailureStatus;
 import com.fipe.domain.model.ProcessingFailure;
 import com.fipe.domain.port.out.repository.ProcessingFailureRepositoryPort;
 import com.fipe.infrastructure.adapter.in.messaging.message.VehicleDataMessage;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import io.smallrye.reactive.messaging.kafka.api.IncomingKafkaRecordMetadata;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,20 +25,17 @@ public class DeadLetterQueueConsumer {
     ProcessingFailureRepositoryPort repository;
     
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Incoming("vehicle-data-dlq")
+    @RunOnVirtualThread
     @Transactional
     public CompletionStage<Void> consumeDeadLetter(Message<String> message) {
         try {
             VehicleDataMessage data = objectMapper.readValue(message.getPayload(), VehicleDataMessage.class);
-            
             ProcessingFailure failure = createFailure(data);
             enrichWithKafkaMetadata(message, failure, data);
             storeFailure(failure, data);
-            
-            LOG.errorf("Message failed permanently for brand: %s. Manual intervention required.", data.getBrandCode());
             return message.ack();
-            
         } catch (Exception e) {
             LOG.errorf(e, "Failed to process DLQ message: %s", message.getPayload());
             return message.nack(e);
