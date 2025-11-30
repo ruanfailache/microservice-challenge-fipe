@@ -138,7 +138,7 @@ If you want to learn more about building native executables, please consult <htt
 #### JVM Mode
 ```shell
 ./mvnw package
-docker build -f src/main/docker/Dockerfile.jvm -t quarkus/user-jvm .
+docker build -f src/main/docker/prod.Dockerfile -t quarkus/user-jvm .
 docker run -i --rm -p 8081:8081 quarkus/user-jvm
 ```
 

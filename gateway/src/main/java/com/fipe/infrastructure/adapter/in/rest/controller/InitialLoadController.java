@@ -4,14 +4,13 @@ import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.InitialLoadApi;
 import com.fipe.infrastructure.security.annotation.RequiresRole;
-import org.jboss.logging.Logger;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.logging.Logger;
     
 @Path("/api/v1/initial-load")
 public class InitialLoadController implements InitialLoadApi {
@@ -23,19 +22,13 @@ public class InitialLoadController implements InitialLoadApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresRole({"ADMIN"})
-    @Override
     public Response triggerInitialLoad() {
-        
         LOG.info("Received request to trigger initial load");
-        
         int brandsProcessed = initialLoadUseCase.executeInitialLoad();
-        
         InitialLoadResponse response = new InitialLoadResponse(
                 "Initial load triggered successfully",
-                brandsProcessed,
-                "PROCESSING"
+                brandsProcessed
         );
-        
         LOG.infof("Initial load triggered successfully. Brands processed: %d", brandsProcessed);
         return Response.status(Response.Status.ACCEPTED).entity(response).build();
     }

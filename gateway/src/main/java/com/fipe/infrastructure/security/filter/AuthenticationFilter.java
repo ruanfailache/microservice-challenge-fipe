@@ -17,25 +17,25 @@ import java.io.IOException;
 @Provider
 @Priority(1000)
 @ApplicationScoped
-public class UserServiceAuthFilter implements ContainerRequestFilter {
+public class AuthenticationFilter implements ContainerRequestFilter {
     
-    private static final Logger LOG = Logger.getLogger(UserServiceAuthFilter.class);
+    private static final Logger LOG = Logger.getLogger(AuthenticationFilter.class);
     
     @Inject
     UserClientPort userClientPort;
     
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    public void filter(ContainerRequestContext requestContext) {
+        String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            LOG.warn("Missing or invalid Authorization header");
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             return;
         }
-        
+        String token = authorization.replace("Bearer ", "").trim();
         try {
-            UserResponse user = userClientPort.validateToken(authHeader);
+            UserResponse user = userClientPort.validateToken(token);
             requestContext.setProperty("authenticatedUser", user);
-            LOG.debugf("Token validated for user: %s with role: %s", user.username(), user.role());
         } catch (Exception e) {
             LOG.warnf("Token validation failed: %s", e.getMessage());
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

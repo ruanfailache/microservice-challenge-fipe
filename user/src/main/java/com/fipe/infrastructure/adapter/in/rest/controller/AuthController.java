@@ -9,6 +9,7 @@ import com.fipe.infrastructure.adapter.in.rest.mapper.UserResponseMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.AuthApi;
 import com.fipe.infrastructure.security.JwtAuthenticationService;
 import io.smallrye.jwt.auth.principal.JWTParser;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @Path("/api/v1/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@PermitAll
 public class AuthController implements AuthApi {
 
     @Inject

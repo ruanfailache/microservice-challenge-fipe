@@ -7,9 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-/**
- * Service for encoding and validating passwords using SHA-256 with salt
- */
 @ApplicationScoped
 public class PasswordEncoder {
     

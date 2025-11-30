@@ -8,7 +8,7 @@ COPY src src
 RUN ./mvnw package -DskipTests
 
 FROM registry.access.redhat.com/ubi9/openjdk-21 AS runtime
- 
+
 ENV LANGUAGE='en_US:en'
 
 COPY --from=build --chown=185 target/quarkus-app/lib/ /deployments/lib/
@@ -22,4 +22,3 @@ ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=or
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
 
 ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
-

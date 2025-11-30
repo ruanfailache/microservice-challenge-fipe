@@ -17,9 +17,9 @@ import java.util.Arrays;
 @Provider
 @Priority(2000)
 @ApplicationScoped
-public class RoleCheckFilter implements ContainerRequestFilter {
+public class RoleFilter implements ContainerRequestFilter {
     
-    private static final Logger LOG = Logger.getLogger(RoleCheckFilter.class);
+    private static final Logger LOG = Logger.getLogger(RoleFilter.class);
     
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

@@ -12,5 +12,4 @@ import lombok.Setter;
 public class InitialLoadResponse {
     private String message;
     private Integer brandsProcessed;
-    private String status;
 }

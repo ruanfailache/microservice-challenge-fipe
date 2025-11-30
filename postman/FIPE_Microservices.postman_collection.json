@@ -281,7 +281,7 @@
                     "exec": [
                       "pm.test(\"Login successful\", function () {",
                       "    var jsonData = pm.response.json();",
-                      "    pm.environment.set(\"jwtToken\", \"Bearer \" + jsonData.token);",
+                      "    pm.environment.set(\"jwtToken\", jsonData.token);",
                       "});"
                     ],
                     "type": "text/javascript"
