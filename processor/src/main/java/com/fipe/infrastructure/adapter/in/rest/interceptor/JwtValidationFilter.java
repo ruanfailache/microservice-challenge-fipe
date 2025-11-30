@@ -29,10 +29,8 @@ public class JwtValidationFilter implements ContainerRequestFilter {
         }
         
         try {
-            boolean isValid = userClientPort.validateToken(authorization);
-            if (!isValid) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-            }
+            userClientPort.validateToken(authorization);
+            // If we get here, token is valid
         } catch (Exception e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }

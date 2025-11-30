@@ -8,6 +8,7 @@ import com.fipe.infrastructure.adapter.in.rest.dto.response.FailureStatisticsRes
 import com.fipe.infrastructure.adapter.in.rest.dto.response.ProcessingFailureResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.ProcessingFailureRestMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.FailureManagementApi;
+import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ import java.util.List;
 @Path("/api/failures")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RequiresRole({"USER", "ADMIN"})
 public class FailureManagementController implements FailureManagementApi {
     
     @Inject
@@ -52,6 +54,7 @@ public class FailureManagementController implements FailureManagementApi {
     
     @PUT
     @Path("/{id}/retry")
+    @RequiresRole({"ADMIN"})
     @Override
     public Response markForRetry(@PathParam("id") Long id) {
         ProcessingFailure failure = useCase.markForRetry(id);
@@ -61,6 +64,7 @@ public class FailureManagementController implements FailureManagementApi {
     
     @PUT
     @Path("/{id}/resolve")
+    @RequiresRole({"ADMIN"})
     @Override
     public Response markAsResolved(@PathParam("id") Long id) {
         ProcessingFailure failure = useCase.markAsResolved(id);
@@ -79,6 +83,7 @@ public class FailureManagementController implements FailureManagementApi {
     
     @DELETE
     @Path("/cleanup")
+    @RequiresRole({"ADMIN"})
     @Override
     public Response cleanup(@QueryParam("days") @DefaultValue("30") int days) {
         long deleted = useCase.cleanupResolvedFailures(days);

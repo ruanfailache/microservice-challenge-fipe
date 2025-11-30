@@ -1,9 +1,9 @@
 package com.fipe.infrastructure.adapter.out.rest.client;
 
+import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /**
@@ -18,6 +18,5 @@ public interface UserClient {
      */
     @POST
     @Path("/api/v1/auth/validate-token")
-    Response validateToken(@HeaderParam("Authorization") String authorization);
+    UserResponse validateToken(@HeaderParam("Authorization") String authorization);
 }
-
