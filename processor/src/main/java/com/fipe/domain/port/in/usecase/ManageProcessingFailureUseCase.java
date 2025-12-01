@@ -6,7 +6,7 @@ import com.fipe.domain.model.ProcessingFailure;
 import java.util.List;
 
 public interface ManageProcessingFailureUseCase {
-    
+
     ProcessingFailure markForRetry(Long failureId);
     
     ProcessingFailure markAsResolved(Long failureId);

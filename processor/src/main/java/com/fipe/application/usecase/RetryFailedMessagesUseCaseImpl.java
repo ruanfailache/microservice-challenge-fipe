@@ -2,6 +2,7 @@ package com.fipe.application.usecase;
 
 import com.fipe.domain.enums.FailureStatus;
 import com.fipe.domain.model.ProcessingFailure;
+import com.fipe.domain.model.RetryResult;
 import com.fipe.domain.port.in.usecase.ProcessVehicleDataUseCase;
 import com.fipe.domain.port.in.usecase.RetryFailedMessagesUseCase;
 import com.fipe.domain.port.out.repository.ProcessingFailureRepositoryPort;
@@ -34,7 +35,7 @@ public class RetryFailedMessagesUseCaseImpl implements RetryFailedMessagesUseCas
     
     @Override
     @Transactional
-    public com.fipe.domain.model.RetryResult retryEligibleFailures() {
+    public RetryResult retryEligibleFailures() {
         LOG.info("Starting retry of eligible failed messages...");
         
         LocalDateTime retryThreshold = LocalDateTime.now().minusMinutes(RETRY_DELAY_MINUTES);
@@ -42,7 +43,7 @@ public class RetryFailedMessagesUseCaseImpl implements RetryFailedMessagesUseCas
         
         if (eligibleFailures.isEmpty()) {
             LOG.info("No failed messages eligible for retry at this time.");
-            return new com.fipe.domain.model.RetryResult(0, 0, 0);
+            return new RetryResult(0, 0, 0);
         }
         
         LOG.infof("Found %d failures eligible for retry", eligibleFailures.size());
@@ -86,10 +87,9 @@ public class RetryFailedMessagesUseCaseImpl implements RetryFailedMessagesUseCas
             }
         }
         
-        LOG.infof("Retry completed - Success: %d, Failed: %d, Exhausted: %d",
-                successCount, failedCount, exhaustedCount);
+        LOG.infof("Retry completed - Success: %d, Failed: %d, Exhausted: %d", successCount, failedCount, exhaustedCount);
         
-        return new com.fipe.domain.model.RetryResult(successCount, failedCount, exhaustedCount);
+        return new RetryResult(successCount, failedCount, exhaustedCount);
     }
     
     private String extractStackTrace(Exception e) {

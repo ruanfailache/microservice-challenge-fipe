@@ -2,6 +2,7 @@ package com.fipe.application.usecase;
 
 import com.fipe.domain.enums.FailureStatus;
 import com.fipe.domain.exception.ResourceNotFoundException;
+import com.fipe.domain.model.Brand;
 import com.fipe.domain.model.ProcessingFailure;
 import com.fipe.domain.port.in.usecase.ManageProcessingFailureUseCase;
 import com.fipe.domain.port.out.repository.ProcessingFailureRepositoryPort;
@@ -20,7 +21,7 @@ public class ManageProcessingFailureUseCaseImpl implements ManageProcessingFailu
     
     @Inject
     ProcessingFailureRepositoryPort repository;
-    
+
     @Override
     @Transactional
     public ProcessingFailure markForRetry(Long failureId) {

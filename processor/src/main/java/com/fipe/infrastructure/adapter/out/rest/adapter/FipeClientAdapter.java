@@ -1,10 +1,13 @@
 package com.fipe.infrastructure.adapter.out.rest.adapter;
 
 import com.fipe.domain.exception.ExternalServiceException;
+import com.fipe.domain.model.Brand;
 import com.fipe.domain.model.Model;
 import com.fipe.domain.port.out.client.FipeClientPort;
+import com.fipe.domain.port.out.publisher.DlqPublisherPort;
 import com.fipe.infrastructure.adapter.out.rest.client.FipeClient;
 import com.fipe.infrastructure.adapter.out.rest.response.FipeModelsWrapper;
+import com.fipe.infrastructure.adapter.in.messaging.message.VehicleDataMessage;
 import io.smallrye.faulttolerance.api.CircuitBreakerName;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,43 +28,42 @@ public class FipeClientAdapter implements FipeClientPort {
     @Inject
     @RestClient
     FipeClient fipeClient;
-    
-    @Override
-    @Retry(maxRetries = 3, delay = 2, delayUnit = ChronoUnit.SECONDS, jitter = 500,
-           retryOn = {ExternalServiceException.class}, abortOn = {IllegalArgumentException.class})
-    @CircuitBreaker(requestVolumeThreshold = 10, failureRatio = 0.5, delay = 30, 
-                   delayUnit = ChronoUnit.SECONDS, successThreshold = 5, 
-                   failOn = {ExternalServiceException.class})
+
+    @Inject
+    DlqPublisherPort dlqPublisher;
+
+    @Retry(delay = 2, delayUnit = ChronoUnit.SECONDS, jitter = 500, retryOn = {ExternalServiceException.class}, abortOn = {IllegalArgumentException.class})
+    @CircuitBreaker(requestVolumeThreshold = 10, delay = 30, delayUnit = ChronoUnit.SECONDS, successThreshold = 5, failOn = {ExternalServiceException.class})
     @CircuitBreakerName("fipe-api-circuit-breaker")
     @Timeout(value = 15, unit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "fetchModelsFallback")
-    @Bulkhead(value = 5, waitingTaskQueue = 10)
-    public List<Model> fetchModelsByBrand(String brandCode) {
-        LOG.infof("Fetching models for brand: %s", brandCode);
-        
+    @Bulkhead(value = 5)
+    public List<Model> fetchModelsByBrand(Brand brand) {
         try {
-            FipeModelsWrapper response = fipeClient.getModels(brandCode);
+            FipeModelsWrapper response = fipeClient.getModels(brand.getCode());
             
             if (response == null || response.getModels() == null) {
-                LOG.warnf("No models found for brand: %s", brandCode);
+                LOG.warnf("No models found for brand: %s", brand.getCode());
                 return Collections.emptyList();
             }
             
-            List<Model> models = response.getModels().stream()
+            return response.getModels().stream()
                     .map(r -> new Model(r.getCode(), r.getName()))
                     .collect(Collectors.toList());
-            
-            LOG.infof("Fetched %d models for brand: %s", models.size(), brandCode);
-            return models;
-            
         } catch (Exception e) {
-            LOG.errorf(e, "Error fetching models for brand: %s", brandCode);
-            throw new ExternalServiceException("Failed to fetch models for brand: " + brandCode, e);
+            LOG.errorf(e, "Error fetching models for brand: %s", brand.getCode());
+            throw new ExternalServiceException("Failed to fetch models for brand: " + brand.getCode(), e);
         }
     }
     
-    List<Model> fetchModelsFallback(String brandCode) {
-        LOG.warnf("Fallback activated for brand: %s", brandCode);
+    List<Model> fetchModelsFallback(Brand brand, ExternalServiceException e) {
+        LOG.warnf("Fallback activated for fetching models of brand: %s due to: %s", brand.getCode(), e.getMessage());
+        try {
+            VehicleDataMessage message = new VehicleDataMessage(brand.getCode(), brand.getName());
+            dlqPublisher.sendFallbackDlq(message, e.getMessage());
+        } catch (Exception ex) {
+            LOG.errorf(ex, "Failed to send DLQ message for brand: %s", brand.getCode());
+        }
         return Collections.emptyList();
     }
 }
