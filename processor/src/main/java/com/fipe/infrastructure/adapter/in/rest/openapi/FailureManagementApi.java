@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.CleanupResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.FailureStatisticsResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.ProcessingFailureResponse;
 import jakarta.ws.rs.core.MediaType;
@@ -25,10 +25,10 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = ProcessingFailureResponse.class))),
             @APIResponse(responseCode = "400", description = "Invalid status value",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class))),
+                            schema = @Schema(implementation = ErrorInResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response getByStatus(
             @Parameter(description = "Failure status (PENDING_RETRY, RETRY_EXHAUSTED, MANUAL_REVIEW_REQUIRED, RESOLVED)", 
@@ -42,10 +42,10 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = ProcessingFailureResponse.class))),
             @APIResponse(responseCode = "404", description = "Failure not found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class))),
+                            schema = @Schema(implementation = ErrorInResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response getById(
             @Parameter(description = "Failure ID", required = true) Long id);
@@ -58,7 +58,7 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = ProcessingFailureResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response getByBrand(
             @Parameter(description = "Brand code", required = true) String brandCode);
@@ -71,10 +71,10 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = ProcessingFailureResponse.class))),
             @APIResponse(responseCode = "404", description = "Failure not found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class))),
+                            schema = @Schema(implementation = ErrorInResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response markForRetry(
             @Parameter(description = "Failure ID", required = true) Long id);
@@ -87,10 +87,10 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = ProcessingFailureResponse.class))),
             @APIResponse(responseCode = "404", description = "Failure not found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class))),
+                            schema = @Schema(implementation = ErrorInResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response markAsResolved(
             @Parameter(description = "Failure ID", required = true) Long id);
@@ -103,7 +103,7 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = FailureStatisticsResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response getStatistics();
     
@@ -115,7 +115,7 @@ public interface FailureManagementApi {
                             schema = @Schema(implementation = CleanupResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
     Response cleanup(
             @Parameter(description = "Delete failures older than this many days", required = false) int days);

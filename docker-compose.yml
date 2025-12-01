@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: fipe
       POSTGRES_PASSWORD: fipe
-      POSTGRES_MULTIPLE_DATABASES: fipe_gateway,fipe_processor,fipe_user
+      POSTGRES_MULTIPLE_DATABASES: fipe_processor,fipe_user
     ports:
       - "5432:5432"
     volumes:
