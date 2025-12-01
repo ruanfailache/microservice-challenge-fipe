@@ -37,7 +37,6 @@ public class FipeClientAdapter implements FipeClientPort {
     @CircuitBreakerName("fipe-api-circuit-breaker")
     @Timeout(value = 15, unit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "fetchModelsFallback")
-    @Bulkhead(value = 5)
     public List<Model> fetchModelsByBrand(Brand brand) {
         try {
             FipeModelsWrapper response = fipeClient.getModels(brand.getCode());
