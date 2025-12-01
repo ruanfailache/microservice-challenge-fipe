@@ -278,11 +278,6 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 Response 202 Accepted:
-{
-  "message": "Initial load triggered successfully",
-  "brandsProcessed": 150,
-  "status": "PROCESSING"
-}
 ```
 
 ### Processor API
