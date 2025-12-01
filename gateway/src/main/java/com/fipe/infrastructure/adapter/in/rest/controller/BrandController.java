@@ -67,7 +67,6 @@ public class BrandController implements BrandApi {
             @PathParam("brandCode") String brandCode,
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization
     ) {
-
         List<Vehicle> vehicles = vehicleUseCase.getVehiclesByBrandCode(authorization, brandCode);
         List<VehicleInResponse> response = vehicles.stream()
                 .map(vehicleMapper::toDTO)

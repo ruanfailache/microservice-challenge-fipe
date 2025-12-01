@@ -56,21 +56,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/brand/{{brandCode}}",
+                  "raw": "{{baseUrl_gateway}}/api/v1/brands/{{brandCode}}/vehicle",
                   "host": ["{{baseUrl_gateway}}"],
-                  "path": ["api", "v1", "vehicles", "brand", "{{brandCode}}"]
-                }
-              }
-            },
-            {
-              "name": "Get Vehicle by ID",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/{{vehicleId}}",
-                  "host": ["{{baseUrl_gateway}}"],
-                  "path": ["api", "v1", "vehicles", "{{vehicleId}}"]
+                  "path": ["api", "v1", "brands", "{{brandCode}}", "vehicle"]
                 }
               }
             },
@@ -89,9 +77,9 @@
                   "raw": "{\n  \"model\": \"Updated Model\",\n  \"observations\": \"Updated observations\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl_gateway}}/api/v1/vehicles/{{vehicleId}}",
+                  "raw": "{{baseUrl_gateway}}/api/v1/brands/{{brandCode}}/vehicle",
                   "host": ["{{baseUrl_gateway}}"],
-                  "path": ["api", "v1", "vehicles", "{{vehicleId}}"]
+                  "path": ["api", "v1", "brands", "{{brandCode}}", "vehicle"]
                 }
               }
             }
@@ -129,6 +117,73 @@
         ]
       },
       "item": [
+        {
+          "name": "Brands",
+          "item": [
+            {
+              "name": "Get All Brands",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/v1/brand",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "v1", "brand"]
+                }
+              }
+            },
+            {
+              "name": "Get Brand by Code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/v1/brand/{{brandCode}}",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "v1", "brand", "{{brandCode}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Vehicles",
+          "item": [
+            {
+              "name": "Get Vehicles by Brand",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/v1/brand/{{brandCode}}/vehicle",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "v1", "brand", "{{brandCode}}", "vehicle"]
+                }
+              }
+            },
+            {
+              "name": "Update Vehicle",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"vehicleCode\",\n  \"model\": \"Updated Model\",\n  \"observations\": \"Updated observations\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl_processor}}/api/v1/brand/{{brandCode}}/vehicle",
+                  "host": ["{{baseUrl_processor}}"],
+                  "path": ["api", "v1", "brand", "{{brandCode}}", "vehicle"]
+                }
+              }
+            }
+          ]
+        },
         {
           "name": "Failures",
           "item": [
@@ -279,10 +334,8 @@
                   "listen": "test",
                   "script": {
                     "exec": [
-                      "pm.test(\"Login successful\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.environment.set(\"jwtToken\", jsonData.token);",
-                      "});"
+                      "var jsonData = pm.response.json();",
+                      "pm.environment.set(\"jwtToken\", jsonData.token);"
                     ],
                     "type": "text/javascript"
                   }
@@ -311,14 +364,14 @@
               }
             },
             {
-              "name": "Validate Token",
+              "name": "Get Current User",
               "request": {
                 "method": "POST",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl_user}}/api/v1/auth/validate-token",
+                  "raw": "{{baseUrl_user}}/api/v1/auth/current-user",
                   "host": ["{{baseUrl_user}}"],
-                  "path": ["api", "v1", "auth", "validate-token"]
+                  "path": ["api", "v1", "auth", "current-user"]
                 }
               }
             }
@@ -478,3 +531,4 @@
     }
   ]
 }
+
