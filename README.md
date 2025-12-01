@@ -371,35 +371,6 @@ Overview
    5. Processor publishes the response message to the `replyTopic` with the same `correlationId` and the response payload.
    6. Gateway consumes the response message from the reply topic and returns the result to the end user.
 
-Topics (recommended)
-- `commands.initial-load` — initial-load command messages (one per brand).
-- `events.vehicle-created` — optional domain events emitted after persistence.
-- `dql.requests` — query/request messages from Gateway.
-- `dql.responses` — response messages published by Processor (or per-request replyTopic).
-
-Minimal message examples
-- Initial-load command:
-  {
-    "brandCode": "1",
-    "brandName": "Fiat",
-    "userCtx": { "userId": "...", "roles": ["ADMIN"] }
-  }
-
-- DQL request:
-  {
-    "brandCode": "1",
-    "filters": { "model": "Palio" },
-    "correlationId": "uuid-1234",
-    "replyTopic": "dql.responses",
-    "userCtx": { "userId": "...", "roles": ["USER"] }
-  }
-
-- DQL response:
-  {
-    "correlationId": "uuid-1234",
-    "payload": { "vehicles": [ /* ... */ ] }
-  }
-
 Notes
 - Gateway must never directly access the Processor database or cache; it acts as an external messaging client.
 - Processor is responsible for authorization checks when messages include `userCtx`.
