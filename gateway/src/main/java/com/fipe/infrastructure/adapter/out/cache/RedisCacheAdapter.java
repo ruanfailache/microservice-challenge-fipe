@@ -29,13 +29,13 @@ public class RedisCacheAdapter implements VehicleCachePort {
     
     private final ObjectMapper objectMapper;
     private final ValueCommands<String, String> valueCommands;
-    
+
     public RedisCacheAdapter() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
-        this.valueCommands = null; // Will be initialized after injection
+        this.valueCommands = null;
     }
-    
+
     private ValueCommands<String, String> getValueCommands() {
         if (valueCommands != null) {
             return valueCommands;

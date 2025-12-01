@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandInResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -18,24 +18,10 @@ public interface BrandApi {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Brands retrieved successfully",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = BrandResponse.class))),
+                            schema = @Schema(implementation = BrandInResponse.class))),
             @APIResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
+                            schema = @Schema(implementation = ErrorInResponse.class)))
     })
-    Response getAllBrands();
-    
-    @Operation(summary = "Get brand by code", description = "Retrieves a specific brand by its code")
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Brand retrieved successfully",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = BrandResponse.class))),
-            @APIResponse(responseCode = "404", description = "Brand not found",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class))),
-            @APIResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    Response getBrandByCode(String code);
+    Response getAllBrands(String authorization);
 }

@@ -7,7 +7,7 @@ import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.exception.ExternalServiceException;
 import com.fipe.domain.exception.InitialLoadException;
 import com.fipe.domain.exception.ValidationException;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -24,49 +24,49 @@ public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
         
         if (exception instanceof ValidationException) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ErrorResponse(exception.getMessage()))
+                    .entity(new ErrorInResponse(exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof NotFoundException) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new ErrorResponse(exception.getMessage()))
+                    .entity(new ErrorInResponse(exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof AuthenticationException) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(new ErrorResponse(exception.getMessage()))
+                    .entity(new ErrorInResponse(exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof ExternalServiceException) {
             return Response.status(Response.Status.BAD_GATEWAY)
-                    .entity(new ErrorResponse(exception.getMessage()))
+                    .entity(new ErrorInResponse(exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof InitialLoadException) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                    .entity(new ErrorResponse(exception.getMessage()))
+                    .entity(new ErrorInResponse(exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof MessagingException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorResponse("Messaging service error: " + exception.getMessage()))
+                    .entity(new ErrorInResponse("Messaging service error: " + exception.getMessage()))
                     .build();
         }
         
         if (exception instanceof CacheException) {
             LOG.warn("Cache exception occurred, continuing without cache", exception);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorResponse("Cache service error: " + exception.getMessage()))
+                    .entity(new ErrorInResponse("Cache service error: " + exception.getMessage()))
                     .build();
         }
         
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(new ErrorResponse("An unexpected error occurred"))
+                .entity(new ErrorInResponse("An unexpected error occurred"))
                 .build();
     }
 }

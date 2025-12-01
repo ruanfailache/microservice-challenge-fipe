@@ -1,19 +1,17 @@
-package com.fipe.domain.model;
+package com.fipe.infrastructure.adapter.in.rest.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
-@ToString
-public class Vehicle {
+public class VehicleInResponse {
     private Long id;
     private String brandCode;
     private String brandName;
@@ -21,4 +19,5 @@ public class Vehicle {
     private String model;
     private String observations;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

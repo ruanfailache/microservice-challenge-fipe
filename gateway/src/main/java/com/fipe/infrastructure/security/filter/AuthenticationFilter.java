@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.security.filter;
 
 import com.fipe.domain.port.out.client.UserClientPort;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.user.UserOutResponse;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) {
         String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         try {
-            UserResponse user = userClientPort.getCurrentUser(authorization);
+            UserOutResponse user = userClientPort.getCurrentUser(authorization);
             requestContext.setProperty("authenticatedUser", user);
         } catch (Exception e) {
             LOG.warnf("Token validation failed: %s", e.getMessage());

@@ -1,6 +1,6 @@
 package com.fipe.infrastructure.adapter.out.rest.client;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.user.UserOutResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
@@ -12,6 +12,6 @@ public interface UserClient {
     
     @POST
     @Path("/api/v1/auth/current-user")
-    UserResponse getCurrentUser(@HeaderParam("Authorization") String authorization);
+    UserOutResponse getCurrentUser(@HeaderParam("Authorization") String authorization);
 }
 

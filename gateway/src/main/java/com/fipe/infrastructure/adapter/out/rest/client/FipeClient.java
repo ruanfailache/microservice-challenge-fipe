@@ -1,6 +1,6 @@
 package com.fipe.infrastructure.adapter.out.rest.client;
 
-import com.fipe.infrastructure.adapter.out.rest.response.FipeBrandResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.fipe.FipeBrandOutResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -14,7 +14,6 @@ import java.util.List;
 public interface FipeClient {
     
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    List<FipeBrandResponse> getBrands();
+    List<FipeBrandOutResponse> getBrands();
 }
 

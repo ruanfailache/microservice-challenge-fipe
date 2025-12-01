@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
+import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadInResponse;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -18,13 +18,13 @@ public interface InitialLoadApi {
             @APIResponse(
                     responseCode = "202",
                     description = "Initial load triggered successfully",
-                    content = @Content(schema = @Schema(implementation = InitialLoadResponse.class))
+                    content = @Content(schema = @Schema(implementation = InitialLoadInResponse.class))
             ),
             @APIResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    content = @Content(schema = @Schema(implementation = ErrorInResponse.class))
             )
     })
-    Response triggerInitialLoad();
+    Response triggerInitialLoad(String authorization);
 }

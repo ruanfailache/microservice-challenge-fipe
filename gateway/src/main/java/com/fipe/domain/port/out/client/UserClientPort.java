@@ -1,7 +1,7 @@
 package com.fipe.domain.port.out.client;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.user.UserOutResponse;
 
 public interface UserClientPort {
-    UserResponse getCurrentUser(String authorization);
+    UserOutResponse getCurrentUser(String authorization);
 }

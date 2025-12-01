@@ -1,8 +1,7 @@
 package com.fipe.application.usecase;
 
-import com.fipe.domain.exception.NotFoundException;
 import com.fipe.domain.model.Brand;
-import com.fipe.domain.port.in.usecase.BrandQueryUseCase;
+import com.fipe.domain.port.in.usecase.BrandUseCase;
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.domain.port.out.publisher.VehicleDataPublisherPort;
@@ -25,11 +24,10 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     VehicleDataPublisherPort vehicleDataPublisherPort;
 
     @Inject
-    BrandQueryUseCase brandQueryUseCase;
+    BrandUseCase brandUseCase;
     
-    @Override
     @Transactional
-    public int executeInitialLoad() {
+    public int executeInitialLoad(String authorization) {
         LOG.info("Starting initial load process");
         
         List<Brand> brands = fipeClientPort.fetchAllBrands();
@@ -45,8 +43,8 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
 
         for (Brand brand : brands) {
             try {
-                boolean isBrandRegistered = brandQueryUseCase.existsBrandByCode(brand.getCode());
-                if (!isBrandRegistered) {
+                Brand foundBrand = brandUseCase.getBrandByCode(authorization, brand.getCode());
+                if (foundBrand == null) {
                     vehicleDataPublisherPort.publishBrandForProcessing(brand);
                     processedCount++;
                 } else {

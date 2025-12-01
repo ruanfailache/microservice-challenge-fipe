@@ -1,6 +1,6 @@
 package com.fipe.infrastructure.security.filter;
 
-import com.fipe.infrastructure.adapter.in.rest.dto.response.UserResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.user.UserOutResponse;
 import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -34,7 +34,7 @@ public class RoleFilter implements ContainerRequestFilter {
         }
         
         if (requiresRole != null && requiresRole.value().length > 0) {
-            UserResponse user = (UserResponse) requestContext.getProperty("authenticatedUser");
+            UserOutResponse user = (UserOutResponse) requestContext.getProperty("authenticatedUser");
             if (user == null) {
                 LOG.warn("No authenticated user found for role check");
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

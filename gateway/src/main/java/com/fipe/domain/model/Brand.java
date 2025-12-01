@@ -1,20 +1,13 @@
 package com.fipe.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
 @EqualsAndHashCode(of = "code")
 @ToString
 public class Brand {
-    
-    @NonNull
-    private final String code;
-    
-    @NonNull
-    private final String name;
+    private String code;
+    private String name;
 }

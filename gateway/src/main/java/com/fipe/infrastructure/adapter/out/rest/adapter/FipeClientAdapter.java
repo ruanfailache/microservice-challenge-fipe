@@ -4,7 +4,7 @@ import com.fipe.domain.exception.ExternalServiceException;
 import com.fipe.domain.model.Brand;
 import com.fipe.domain.port.out.client.FipeClientPort;
 import com.fipe.infrastructure.adapter.out.rest.client.FipeClient;
-import com.fipe.infrastructure.adapter.out.rest.response.FipeBrandResponse;
+import com.fipe.infrastructure.adapter.out.rest.dto.response.fipe.FipeBrandOutResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -26,7 +26,7 @@ public class FipeClientAdapter implements FipeClientPort {
     public List<Brand> fetchAllBrands() {
         try {
             LOG.info("Fetching all brands from FIPE API");
-            List<FipeBrandResponse> response = fipeClient.getBrands();
+            List<FipeBrandOutResponse> response = fipeClient.getBrands();
             
             List<Brand> brands = response.stream()
                     .map(r -> new Brand(r.getCode(), r.getName()))
