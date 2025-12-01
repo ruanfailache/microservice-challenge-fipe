@@ -41,9 +41,7 @@ public class BrandController implements BrandApi {
     @GET
     public Response getAllBrands(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization) {
         List<Brand> brands = brandUseCase.getAllBrands(authorization);
-        List<BrandInResponse> response = brands.stream()
-                .map(brandMapper::toDTO)
-                .toList();
+        List<BrandInResponse> response = brandMapper.toDTO(brands);
         return Response.ok(response).build();
     }
     
@@ -68,9 +66,7 @@ public class BrandController implements BrandApi {
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization
     ) {
         List<Vehicle> vehicles = vehicleUseCase.getVehiclesByBrandCode(authorization, brandCode);
-        List<VehicleInResponse> response = vehicles.stream()
-                .map(vehicleMapper::toDTO)
-                .toList();
+        List<VehicleInResponse> response = vehicleMapper.toDTO(vehicles);
         return Response.ok(response).build();
     }
 

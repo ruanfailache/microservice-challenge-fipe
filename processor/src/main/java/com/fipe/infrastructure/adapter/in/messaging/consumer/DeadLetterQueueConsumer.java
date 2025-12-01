@@ -33,7 +33,7 @@ public class DeadLetterQueueConsumer {
         try {
             VehicleDataMessage data = objectMapper.readValue(message.getPayload(), VehicleDataMessage.class);
             ProcessingFailure failure = createFailure(data);
-            enrichWithKafkaMetadata(message, failure, data);
+            enrichWithKafkaMetadata(message, failure);
             storeFailure(failure, data);
             return message.ack();
         } catch (Exception e) {
@@ -52,12 +52,8 @@ public class DeadLetterQueueConsumer {
         );
     }
     
-    private void enrichWithKafkaMetadata(Message<String> message, 
-                                        ProcessingFailure failure, VehicleDataMessage data) {
+    private void enrichWithKafkaMetadata(Message<String> message, ProcessingFailure failure) {
         message.getMetadata(IncomingKafkaRecordMetadata.class).ifPresent(metadata -> {
-            LOG.errorf("DLQ - Topic: %s, Partition: %d, Offset: %d, Brand: %s",
-                    metadata.getTopic(), metadata.getPartition(), metadata.getOffset(), data.getBrandCode());
-            
             failure.setKafkaTopic(metadata.getTopic());
             failure.setKafkaPartition(metadata.getPartition());
             failure.setKafkaOffset(metadata.getOffset());
@@ -65,11 +61,6 @@ public class DeadLetterQueueConsumer {
     }
     
     private void storeFailure(ProcessingFailure failure, VehicleDataMessage data) {
-        try {
-            repository.save(failure);
-            LOG.infof("Stored failure for brand: %s with ID: %d", data.getBrandCode(), failure.getId());
-        } catch (Exception e) {
-            LOG.errorf(e, "Failed to store failure record for brand: %s", data.getBrandCode());
-        }
+        repository.save(failure);
     }
 }

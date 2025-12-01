@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface VehicleDataRepositoryPort {
     
-    VehicleData save(VehicleData vehicleData);
+    List<VehicleData> saveAll(List<VehicleData> vehicleData);
     
     boolean exists(String brandCode, String code);
 

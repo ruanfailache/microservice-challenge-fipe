@@ -1,15 +1,14 @@
 package com.fipe.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"brandCode", "code"})
 @ToString
 public class VehicleData {
@@ -20,20 +19,20 @@ public class VehicleData {
     private String code;
     private String model;
     private String observations;
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    public VehicleData(Long id, String brandCode, String brandName, String code, String model, String observations, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.brandCode = Objects.requireNonNull(brandCode, "Brand code cannot be null");
-        this.brandName = Objects.requireNonNull(brandName, "Brand name cannot be null");
-        this.code = Objects.requireNonNull(code, "Code cannot be null");
-        this.model = Objects.requireNonNull(model, "Model cannot be null");
-        this.observations = observations;
-        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
-        this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
+    public static VehicleData create(String brandCode, String brandName, String code, String model) {
+        VehicleData data = new VehicleData();
+        data.setBrandCode(Objects.requireNonNull(brandCode, "Brand code cannot be null"));
+        data.setBrandName(Objects.requireNonNull(brandName, "Brand name cannot be null"));
+        data.setCode(Objects.requireNonNull(code, "Code cannot be null"));
+        data.setModel(Objects.requireNonNull(model, "Model cannot be null"));
+        data.setCreatedAt(LocalDateTime.now());
+        data.setUpdatedAt(LocalDateTime.now());
+        return data;
     }
-    
+
     public void setModel(String model) {
         this.model = Objects.requireNonNull(model, "Model cannot be null");
         this.updatedAt = LocalDateTime.now();

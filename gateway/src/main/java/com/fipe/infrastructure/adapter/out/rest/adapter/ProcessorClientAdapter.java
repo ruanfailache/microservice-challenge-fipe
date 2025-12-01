@@ -37,9 +37,8 @@ public class ProcessorClientAdapter implements ProcessorClientPort {
 
     public List<Brand> getAllBrands(String authorization) {
         try {
-            return processorClient.getAllBrands(authorization).stream()
-                    .map(processorBrandOutMapper::toDomain)
-                    .collect(Collectors.toList());
+            List<ProcessorBrandOutResponse> responses = processorClient.getAllBrands(authorization);
+            return processorBrandOutMapper.toDomain(responses);
         } catch (Exception e) {
             LOG.error("Error fetching brands from FIPE API", e);
             throw new ExternalServiceException("Failed to fetch brands from PROCESSOR API", e);
@@ -65,11 +64,10 @@ public class ProcessorClientAdapter implements ProcessorClientPort {
 
     public List<Vehicle> getVehiclesByBrandCode(String authorization, String brandCode) {
         try {
-            return processorClient.getVehiclesByBrand(authorization, brandCode).stream()
-                    .map(processorVehicleOutMapper::toDomain)
-                    .toList();
+            List<ProcessorVehicleOutResponse> responses = processorClient.getVehiclesByBrand(authorization, brandCode);
+            return processorVehicleOutMapper.toDomain(responses);
         } catch (Exception e) {
-            LOG.error("Error fetching brands from FIPE API", e);
+            LOG.error("Failed to fetch vehicles by branch from PROCESSOR API", e);
             throw new ExternalServiceException("Failed to fetch vehicles by branch from PROCESSOR API", e);
         }
     }
@@ -80,7 +78,7 @@ public class ProcessorClientAdapter implements ProcessorClientPort {
             ProcessorVehicleOutResponse response = processorClient.updateVehicle(authorization, brandCode, request);
             return processorVehicleOutMapper.toDomain(response);
         } catch (Exception e) {
-            LOG.error("Error fetching brands from FIPE API", e);
+            LOG.error("Failed to update vehicle from PROCESSOR API", e);
             throw new ExternalServiceException("Failed to update vehicle from PROCESSOR API", e);
         }
     }

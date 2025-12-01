@@ -1,5 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
+import com.fipe.domain.model.Brand;
 import com.fipe.domain.model.VehicleData;
 import com.fipe.domain.port.in.usecase.ManageVehicleDataUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.ProcessorUpdateVehicleOutRequest;
@@ -28,11 +29,9 @@ public class VehicleDataController implements VehicleDataApi {
     ProcessorRestMapper processorRestMapper;
 
     @GET
-    @Override
     public Response getAllBrands() {
-        List<ProcessorBrandOutResponse> response = manageVehicleDataUseCase.getAllBrands().stream()
-                .map(processorRestMapper::toBrandResponse)
-                .toList();
+        List<Brand> brands = manageVehicleDataUseCase.getAllBrands();
+        List<ProcessorBrandOutResponse> response = processorRestMapper.toBrandResponse(brands);
         return Response.ok(response).build();
     }
 

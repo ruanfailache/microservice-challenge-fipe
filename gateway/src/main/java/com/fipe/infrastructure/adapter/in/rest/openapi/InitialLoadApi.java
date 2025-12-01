@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadInResponse;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -17,8 +16,7 @@ public interface InitialLoadApi {
     @APIResponses(value = {
             @APIResponse(
                     responseCode = "202",
-                    description = "Initial load triggered successfully",
-                    content = @Content(schema = @Schema(implementation = InitialLoadInResponse.class))
+                    description = "Initial load triggered successfully"
             ),
             @APIResponse(
                     responseCode = "500",

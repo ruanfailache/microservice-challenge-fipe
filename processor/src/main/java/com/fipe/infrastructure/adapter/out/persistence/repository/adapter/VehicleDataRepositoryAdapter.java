@@ -30,14 +30,9 @@ public class VehicleDataRepositoryAdapter implements VehicleDataRepositoryPort {
     BrandMapper brandMapper;
 
     @Override
-    public VehicleData save(VehicleData vehicleData) {
-        LOG.debugf("Saving vehicle data: brand=%s, code=%s", 
-                vehicleData.getBrandCode(), vehicleData.getCode());
-        
-        VehicleDataEntity entity = vehicleDataMapper.toEntity(vehicleData);
+    public List<VehicleData> saveAll(List<VehicleData> vehiclesData) {
+        List<VehicleDataEntity> entity = vehicleDataMapper.toEntity(vehiclesData);
         vehicleDataRepository.persist(entity);
-        
-        LOG.debugf("Vehicle data saved with id: %d", entity.getId());
         return vehicleDataMapper.toDomain(entity);
     }
     

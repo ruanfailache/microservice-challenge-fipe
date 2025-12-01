@@ -14,7 +14,7 @@ public interface ProcessorRestMapper {
 
     ProcessorBrandOutResponse toBrandResponse(VehicleData vehicleData);
 
-    ProcessorBrandOutResponse toBrandResponse(Brand brand);
+    List<ProcessorBrandOutResponse> toBrandResponse(List<Brand> brand);
 
     ProcessorVehicleOutResponse toVehicleResponse(VehicleData vehicleData);
 

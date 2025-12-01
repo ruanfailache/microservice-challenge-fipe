@@ -1,7 +1,6 @@
 package com.fipe.infrastructure.adapter.in.rest.controller;
 
 import com.fipe.domain.port.in.usecase.InitialLoadUseCase;
-import com.fipe.infrastructure.adapter.in.rest.dto.response.InitialLoadInResponse;
 import com.fipe.infrastructure.adapter.in.rest.openapi.InitialLoadApi;
 import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.inject.Inject;
@@ -25,13 +24,7 @@ public class InitialLoadController implements InitialLoadApi {
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresRole({"ADMIN"})
     public Response triggerInitialLoad(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization) {
-        LOG.info("Received request to trigger initial load");
-        int brandsProcessed = initialLoadUseCase.executeInitialLoad(authorization);
-        InitialLoadInResponse response = new InitialLoadInResponse(
-                "Initial load triggered successfully",
-                brandsProcessed
-        );
-        LOG.infof("Initial load triggered successfully. Brands processed: %d", brandsProcessed);
-        return Response.status(Response.Status.ACCEPTED).entity(response).build();
+        initialLoadUseCase.executeInitialLoad(authorization);
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 }

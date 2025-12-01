@@ -8,16 +8,13 @@ import com.fipe.domain.port.out.repository.VehicleDataRepositoryPort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.jboss.logging.Logger;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
 public class ProcessVehicleDataUseCaseImpl implements ProcessVehicleDataUseCase {
-    
-    private static final Logger LOG = Logger.getLogger(ProcessVehicleDataUseCaseImpl.class);
-    
+
     @Inject
     FipeClientPort fipeClientPort;
     
@@ -26,32 +23,28 @@ public class ProcessVehicleDataUseCaseImpl implements ProcessVehicleDataUseCase 
     
     @Override
     @Transactional
-    public void processVehicleData(String brandCode, String brandName) {
+    public List<VehicleData> processVehicleData(String brandCode, String brandName) {
         List<Model> models = fipeClientPort.fetchModelsByBrand(brandCode);
 
         if (models.isEmpty()) {
-            return;
+            return List.of();
         }
 
+        List<VehicleData> vehiclesData = new ArrayList<>();
+
         for (Model model : models) {
-            try {
-                if (vehicleDataRepositoryPort.exists(brandCode, model.getCode())) {
-                    continue;
-                }
-                VehicleData vehicleData = new VehicleData(
-                        null,
-                        brandCode,
-                        brandName,
-                        model.getCode(),
-                        model.getName(),
-                        null,
-                        LocalDateTime.now(),
-                        LocalDateTime.now()
-                );
-                vehicleDataRepositoryPort.save(vehicleData);
-            } catch (Exception e) {
-                LOG.errorf(e, "Failed to save vehicle data for brand: %s, model: %s", brandCode, model.getCode());
+            if (vehicleDataRepositoryPort.exists(brandCode, model.getCode())) {
+                continue;
             }
+            VehicleData vehicleData = VehicleData.create(
+                    brandCode,
+                    brandName,
+                    model.getCode(),
+                    model.getName()
+            );
+            vehiclesData.add(vehicleData);
         }
+
+        return vehicleDataRepositoryPort.saveAll(vehiclesData);
     }
 }
