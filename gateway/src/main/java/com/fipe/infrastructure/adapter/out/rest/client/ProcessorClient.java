@@ -28,24 +28,24 @@ public interface ProcessorClient {
     );
 
     @GET
-    @Path("/api/v1/brand/{brand}")
+    @Path("/api/v1/brand/{brandCode}")
     ProcessorBrandOutResponse getBrandByCode(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @PathParam("brand") String brand
+            @PathParam("brandCode") String brandCode
     );
 
     @GET
-    @Path("/api/v1/brand/{brand}/vehicle")
+    @Path("/api/v1/brand/{brandCode}/vehicle")
     List<ProcessorVehicleOutResponse> getVehiclesByBrand(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @PathParam("brand") String brand
+            @PathParam("brandCode") String brandCode
     );
 
     @PUT
-    @Path("/api/v1/brand/{brand}/vehicle")
+    @Path("/api/v1/vehicle/{vehicleId}")
     ProcessorVehicleOutResponse updateVehicle(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @PathParam("brand") String brand,
+            @PathParam("vehicleId") Long vehicleId,
             ProcessorUpdateVehicleOutRequest vehicleRequest
     );
 }

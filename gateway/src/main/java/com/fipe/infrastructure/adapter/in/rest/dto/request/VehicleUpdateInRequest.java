@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VehicleUpdateRequest {
+public class VehicleUpdateInRequest {
     private String model;
     private String observations;
 }

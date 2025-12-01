@@ -51,9 +51,9 @@ public class VehicleDataRepositoryAdapter implements VehicleDataRepositoryPort {
     }
 
     @Override
-    public Optional<VehicleData> findByBrandCodeAndCode(String brandCode, String code) {
-        LOG.debugf("Finding vehicle by brand code and code: brand=%s, code=%s", brandCode, code);
-        return vehicleDataRepository.findByBrandCodeAndCode(brandCode, code).map(vehicleDataMapper::toDomain);
+    public Optional<VehicleData> findById(Long id) {
+        LOG.debugf("Finding vehicle by id: %s", id);
+        return vehicleDataRepository.findByIdOptional(id).map(vehicleDataMapper::toDomain);
     }
 
     @Override

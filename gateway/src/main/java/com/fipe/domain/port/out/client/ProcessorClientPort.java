@@ -14,5 +14,5 @@ public interface ProcessorClientPort {
 
     List<Vehicle> getVehiclesByBrandCode(String authorization, String brandCode);
 
-    Vehicle updateVehicle(String authorization, String brandCode, ProcessorUpdateVehicleOutRequest vehicleRequest);
+    Vehicle updateVehicle(String authorization, Long vehicleId, ProcessorUpdateVehicleOutRequest vehicleRequest);
 }

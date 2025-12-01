@@ -4,13 +4,12 @@ import com.fipe.domain.model.Brand;
 import com.fipe.domain.model.Vehicle;
 import com.fipe.domain.port.in.usecase.BrandUseCase;
 import com.fipe.domain.port.in.usecase.VehicleUseCase;
-import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateInRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.BrandInResponse;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleInResponse;
 import com.fipe.infrastructure.adapter.in.rest.mapper.BrandMapper;
 import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.BrandApi;
-import com.fipe.infrastructure.adapter.out.rest.dto.request.processor.ProcessorUpdateVehicleOutRequest;
 import com.fipe.infrastructure.security.annotation.RequiresRole;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -19,7 +18,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.Optional;
 
 @Path("/api/v1/brands")
 @Produces(MediaType.APPLICATION_JSON)
@@ -71,17 +69,14 @@ public class BrandController implements BrandApi {
     }
 
     @PUT
-    @Path("/{brandCode}/vehicle")
+    @Path("/{vehicleId}/vehicle")
     @RequiresRole({"USER", "ADMIN"})
     public Response updateVehicle(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @PathParam("brandCode") String brandCode, VehicleUpdateRequest request
+            @PathParam("vehicleId") Long vehicleId,
+            VehicleUpdateInRequest request
     ) {
-        Vehicle updated = vehicleUseCase.updateVehicle(
-                authorization,
-                brandCode,
-                new ProcessorUpdateVehicleOutRequest(request.getModel(), request.getObservations())
-        );
+        Vehicle updated = vehicleUseCase.updateVehicle(authorization, vehicleId, request);
         VehicleInResponse response = vehicleMapper.toDTO(updated);
         return Response.ok(response).build();
     }

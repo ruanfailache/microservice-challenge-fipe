@@ -1,7 +1,7 @@
 package com.fipe.infrastructure.adapter.in.rest.openapi;
 
 import com.fipe.infrastructure.adapter.in.rest.dto.response.ErrorInResponse;
-import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateRequest;
+import com.fipe.infrastructure.adapter.in.rest.dto.request.VehicleUpdateInRequest;
 import com.fipe.infrastructure.adapter.in.rest.dto.response.VehicleInResponse;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -65,5 +65,5 @@ public interface VehicleApi {
     })
     Response updateVehicle(
             @Parameter(description = "Vehicle ID", required = true) Long id,
-            VehicleUpdateRequest updateDTO);
+            VehicleUpdateInRequest updateDTO);
 }

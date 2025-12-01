@@ -15,8 +15,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-@Tag(name = "Processor", description = "Operations for managing processed vehicle data")
-public interface VehicleDataApi {
+@Tag(name = "Brand", description = "Operations for managing processed vehicle's brand data")
+public interface BrandApi {
 
     @Operation(summary = "Get all brands",
                description = "Retrieve all processed brands")
@@ -61,27 +61,4 @@ public interface VehicleDataApi {
     })
     Response getVehiclesByBrand(
             @Parameter(description = "Brand code", required = true) String brandCode);
-
-    @Operation(summary = "Update vehicle",
-               description = "Update a vehicle's information")
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Vehicle updated",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ProcessorVehicleOutResponse.class))),
-            @APIResponse(responseCode = "400", description = "Invalid request",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorInResponse.class))),
-            @APIResponse(responseCode = "404", description = "Vehicle not found",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorInResponse.class))),
-            @APIResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = ErrorInResponse.class)))
-    })
-    Response updateVehicle(
-            @Parameter(description = "Brand code", required = true) String brandCode,
-            @RequestBody(description = "Vehicle update data", required = true,
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                                schema = @Schema(implementation = ProcessorUpdateVehicleOutRequest.class)))
-            ProcessorUpdateVehicleOutRequest request);
 }

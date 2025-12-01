@@ -72,10 +72,9 @@ public class ProcessorClientAdapter implements ProcessorClientPort {
         }
     }
 
-    @Override
-    public Vehicle updateVehicle(String authorization, String brandCode, ProcessorUpdateVehicleOutRequest request) {
+    public Vehicle updateVehicle(String authorization, Long vehicleId, ProcessorUpdateVehicleOutRequest request) {
         try {
-            ProcessorVehicleOutResponse response = processorClient.updateVehicle(authorization, brandCode, request);
+            ProcessorVehicleOutResponse response = processorClient.updateVehicle(authorization, vehicleId, request);
             return processorVehicleOutMapper.toDomain(response);
         } catch (Exception e) {
             LOG.error("Failed to update vehicle from PROCESSOR API", e);

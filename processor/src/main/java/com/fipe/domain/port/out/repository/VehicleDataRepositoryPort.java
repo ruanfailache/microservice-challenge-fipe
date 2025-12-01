@@ -14,7 +14,7 @@ public interface VehicleDataRepositoryPort {
 
     List<VehicleData> findAllByBrandCode(String brandCode);
 
-    Optional<VehicleData> findByBrandCodeAndCode(String brandCode, String code);
+    Optional<VehicleData> findById(Long vehicleId);
 
     VehicleData update(VehicleData vehicleData);
 

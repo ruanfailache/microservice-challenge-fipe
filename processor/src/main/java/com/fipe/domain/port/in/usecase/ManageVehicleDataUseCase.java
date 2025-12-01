@@ -14,7 +14,7 @@ public interface ManageVehicleDataUseCase {
 
     List<VehicleData> getVehiclesByBrand(String brandCode);
 
-    Optional<VehicleData> getVehicleByBrandAndCode(String brandCode, String code);
+    Optional<VehicleData> getVehicleById(Long vehicleId);
 
     VehicleData updateVehicle(VehicleData vehicleData);
 }

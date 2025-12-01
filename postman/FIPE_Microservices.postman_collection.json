@@ -77,9 +77,9 @@
                   "raw": "{\n  \"model\": \"Updated Model\",\n  \"observations\": \"Updated observations\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl_gateway}}/api/v1/brands/{{brandCode}}/vehicle",
+                  "raw": "{{baseUrl_gateway}}/api/v1/brands/{{vehicleId}}/vehicle",
                   "host": ["{{baseUrl_gateway}}"],
-                  "path": ["api", "v1", "brands", "{{brandCode}}", "vehicle"]
+                  "path": ["api", "v1", "brands", "{{vehicleId}}", "vehicle"]
                 }
               }
             }
@@ -176,9 +176,9 @@
                   "raw": "{\n  \"code\": \"vehicleCode\",\n  \"model\": \"Updated Model\",\n  \"observations\": \"Updated observations\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl_processor}}/api/v1/brand/{{brandCode}}/vehicle",
+                  "raw": "{{baseUrl_processor}}/api/v1/vehicle/{{vehicleId}}",
                   "host": ["{{baseUrl_processor}}"],
-                  "path": ["api", "v1", "brand", "{{brandCode}}", "vehicle"]
+                  "path": ["api", "v1", "vehicle", "{{vehicleId}}"]
                 }
               }
             }
@@ -531,4 +531,3 @@
     }
   ]
 }
-

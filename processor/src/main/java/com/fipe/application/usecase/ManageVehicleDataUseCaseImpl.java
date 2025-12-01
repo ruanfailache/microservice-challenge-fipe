@@ -35,9 +35,8 @@ public class ManageVehicleDataUseCaseImpl implements ManageVehicleDataUseCase {
         return vehicleDataRepositoryPort.findAllByBrandCode(brandCode);
     }
 
-    public Optional<VehicleData> getVehicleByBrandAndCode(String brandCode, String code) {
-        LOG.debugf("Getting vehicle by brand and code: brand=%s, code=%s", brandCode, code);
-        return vehicleDataRepositoryPort.findByBrandCodeAndCode(brandCode, code);
+    public Optional<VehicleData> getVehicleById(Long vehicleId) {
+        return vehicleDataRepositoryPort.findById(vehicleId);
     }
 
     @Transactional
