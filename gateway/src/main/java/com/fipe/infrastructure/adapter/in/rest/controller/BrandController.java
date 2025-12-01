@@ -12,7 +12,6 @@ import com.fipe.infrastructure.adapter.in.rest.mapper.VehicleMapper;
 import com.fipe.infrastructure.adapter.in.rest.openapi.BrandApi;
 import com.fipe.infrastructure.adapter.out.rest.dto.request.processor.ProcessorUpdateVehicleOutRequest;
 import com.fipe.infrastructure.security.annotation.RequiresRole;
-import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -20,7 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Path("/api/v1/brands")
 @Produces(MediaType.APPLICATION_JSON)
@@ -54,7 +53,10 @@ public class BrandController implements BrandApi {
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @PathParam("code") String code
     ) {
-        Brand brand = brandUseCase.getBrandByCode(authorization, code);
+        Brand brand = brandUseCase.getBrandByCode(authorization, code).orElse(null);
+        if (brand == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         BrandInResponse response = brandMapper.toDTO(brand);
         return Response.ok(response).build();
     }

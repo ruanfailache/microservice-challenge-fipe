@@ -5,8 +5,10 @@ import com.fipe.domain.model.User;
 import com.fipe.domain.port.in.usecase.CreateUserUseCase;
 import com.fipe.domain.port.in.usecase.GetUserUseCase;
 import com.fipe.infrastructure.adapter.in.rest.dto.request.CreateUserRequest;
+import io.quarkus.runtime.StartupEvent;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +24,7 @@ public class SeedConfig {
     @Inject
     GetUserUseCase getUserUseCase;
 
-    @PostConstruct
-    void seed() {
+    void seed(@Observes StartupEvent event) {
         for (Role role : Role.values()) {
             String username = role.name().toLowerCase();
             try {

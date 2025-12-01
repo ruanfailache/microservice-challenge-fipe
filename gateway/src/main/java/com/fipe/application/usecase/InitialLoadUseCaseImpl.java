@@ -9,8 +9,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.ClientWebApplicationException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @ApplicationScoped
 public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
@@ -28,8 +31,6 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
     
     @Transactional
     public int executeInitialLoad(String authorization) {
-        LOG.info("Starting initial load process");
-        
         List<Brand> brands = fipeClientPort.fetchAllBrands();
     
         if (brands.isEmpty()) {
@@ -37,25 +38,16 @@ public class InitialLoadUseCaseImpl implements InitialLoadUseCase {
             return 0;
         }
         
-        LOG.infof("Found %d brands to process", brands.size());
-        
         int processedCount = 0;
 
         for (Brand brand : brands) {
-            try {
-                Brand foundBrand = brandUseCase.getBrandByCode(authorization, brand.getCode());
-                if (foundBrand == null) {
-                    vehicleDataPublisherPort.publishBrandForProcessing(brand);
-                    processedCount++;
-                } else {
-                    LOG.warnf("Brand \"%s\" is already registered", brand.getCode());
-                }
-            } catch (Exception e) {
-                LOG.errorf(e, "Failed to publish brand: %s", brand.getCode());
+            Optional<Brand> foundBrand = brandUseCase.getBrandByCode(authorization, brand.getCode());
+            if (foundBrand.isEmpty()) {
+                vehicleDataPublisherPort.publishBrandForProcessing(brand);
+                processedCount++;
             }
         }
 
-        LOG.infof("Initial load completed. Published %d brands for processing", processedCount);
         return processedCount;
     }
 }
