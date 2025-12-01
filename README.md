@@ -4,19 +4,28 @@ A microservices-based system for managing FIPE vehicle data, implementing **Hexa
 
 ## 🏗️ Architecture
 
-This project follows **Hexagonal Architecture** with two microservices:
+This project follows **Hexagonal Architecture** with three microservices:
 
 ### Gateway Service (Port 8080)
 - **REST API**: Exposes endpoints for triggering initial vehicle data load
 - **External Client**: Fetches vehicle brands (marcas) from FIPE API
 - **Kafka Producer**: Publishes marca messages for processing
 - **Redis**: Caching layer for performance optimization
+- **User Service Client**: Communicates with User Service for authentication
 
 ### Processor Service (Port 8081)
 - **Kafka Consumer**: Consumes marca messages from gateway
 - **External Client**: Fetches vehicle models (modelos) from FIPE API
 - **PostgreSQL**: Persists vehicle data (marca, codigo, modelo)
 - **Background Processing**: Asynchronous data processing
+- **User Service Client**: Communicates with User Service for authentication
+
+### User Service (Port 8082)
+- **REST API**: Provides user management endpoints (CRUD operations)
+- **Authentication**: JWT-based authentication with RSA keys
+- **Authorization**: Role-based access control (ADMIN, USER, MANAGER, VIEWER)
+- **PostgreSQL**: Stores user data
+- **Password Management**: Secure password encoding and validation
 
 ## 📂 Project Structure
 
@@ -141,25 +150,6 @@ src/main/java/com/fipe/
    docker-compose down
    ```
 
-### Running Locally (Development)
-
-1. **Start infrastructure** (PostgreSQL, Kafka, Redis):
-   ```powershell
-   docker-compose up -d postgres kafka redis
-   ```
-
-2. **Run Gateway** (in terminal 1):
-   ```powershell
-   cd gateway
-   ./mvnw quarkus:dev
-   ```
-
-3. **Run Processor** (in terminal 2):
-   ```powershell
-   cd processor
-   ./mvnw quarkus:dev
-   ```
-
 ## 📖 API Documentation
 
 ### Gateway API
@@ -183,8 +173,7 @@ Response 200 OK:
 {
   "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
   "username": "admin",
-  "role": "ADMIN",
-  "expiresIn": 86400
+  "role": "ADMIN"
 }
 ```
 
@@ -301,96 +290,10 @@ Response 202 Accepted:
 - **Swagger UI**: http://localhost:8081/swagger-ui
 - **OpenAPI Spec**: http://localhost:8081/swagger
 
-## 🧪 Testing
+### User Service API
 
-### Run Unit Tests
-
-**Gateway**:
-```powershell
-cd gateway
-./mvnw test
-```
-
-**Processor**:
-```powershell
-cd processor
-./mvnw test
-```
-
-### Test Coverage
-
-Tests include:
-- ✅ Domain model validation tests
-- ✅ Use case service tests with mocks
-- ✅ Edge cases and error scenarios
-- ✅ Repository adapter tests
-- ✅ Exception handling tests
-
-### Manual Testing
-
-1. **Start services**:
-   ```powershell
-   docker-compose up -d
-   ```
-
-2. **Wait for services to be ready** (30-60 seconds)
-
-3. **Login and get token**:
-   ```powershell
-   $response = Invoke-RestMethod -Uri "http://localhost:8080/api/v1/auth/login" -Method POST -ContentType "application/json" -Body '{"username":"admin","password":"admin"}'
-   $token = $response.token
-   ```
-
-4. **Trigger initial load** (with authentication):
-   ```powershell
-   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/initial-load" -Method POST -Headers @{Authorization="Bearer $token"}
-   ```
-
-5. **Get all brands** (public endpoint):
-   ```powershell
-   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/brands"
-   ```
-
-6. **Get vehicles by brand** (public endpoint, cached):
-   ```powershell
-   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/vehicles/brand/1"
-   ```
-
-7. **Update a vehicle** (with authentication):
-   ```powershell
-   $updateBody = @{
-       model = "Palio 1.0 Fire"
-       observations = "Carro com ar-condicionado"
-   } | ConvertTo-Json
-   
-   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/vehicles/1" -Method PUT -Headers @{Authorization="Bearer $token"} -ContentType "application/json" -Body $updateBody
-   ```
-
-8. **Check processor logs**:
-   ```powershell
-   docker-compose logs -f processor
-   ```
-
-9. **Verify data in database**:
-   ```powershell
-   # Gateway database
-   docker exec -it postgres psql -U fipe -d fipe_gateway
-   SELECT COUNT(*) FROM vehicle;
-   SELECT * FROM vehicle LIMIT 10;
-   
-   # Processor database
-   docker exec -it postgres psql -U fipe -d fipe_processor
-   SELECT COUNT(*) FROM vehicle_data;
-   SELECT * FROM vehicle_data LIMIT 10;
-   ```
-
-10. **Check Redis cache**:
-    ```powershell
-    docker exec -it redis redis-cli
-    KEYS *
-    GET brands:all
-    GET vehicles:brand:1
-    ```
+- **Swagger UI**: http://localhost:8082/swagger-ui
+- **OpenAPI Spec**: http://localhost:8082/swagger
 
 ## 🎯 Design Patterns Used
 
@@ -412,33 +315,6 @@ Tests include:
 
 ## 📊 Database Schema
 
-### Gateway Database (fipe_gateway)
-
-**brand Table:**
-```sql
-CREATE TABLE brand (
-    id BIGSERIAL PRIMARY KEY,
-    code VARCHAR(50) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL
-);
-```
-
-**vehicle Table:**
-```sql
-CREATE TABLE vehicle (
-    id BIGSERIAL PRIMARY KEY,
-    brand_code VARCHAR(50) NOT NULL,
-    brand_name VARCHAR(255) NOT NULL,
-    code VARCHAR(50) NOT NULL,
-    model VARCHAR(500) NOT NULL,
-    observations TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    CONSTRAINT uk_vehicle_brand_code UNIQUE (brand_code, code)
-);
-```
-
 ### Processor Database (fipe_processor)
 
 **vehicle_data Table:**
@@ -456,110 +332,79 @@ CREATE TABLE vehicle_data (
 );
 ```
 
+### User Service Database (fipe_user)
+
+**user Table:**
+```sql
+CREATE TABLE "user" (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+```
+
 ### Indexes
 - Primary keys on `id` columns
 - Unique constraints on (`brand_code`, `code`)
 - Indexes on `brand_code` for faster brand queries
 - Indexes on `created_at` for time-based queries
-- Index on `brand.code` for faster brand lookups
+- Unique index on `user.username` for faster user lookups
 
 ## 🔄 Message Flow
 
-```
-┌─────────────┐      ┌─────────────┐      ┌──────────┐      ┌───────────────┐
-│   Client    │─────▶│   Gateway   │─────▶│  Kafka   │─────▶│   Processor   │
-└─────────────┘      └─────────────┘      └──────────┘      └───────────────┘
-                            │                                         │
-                            │                                         │
-                            ▼                                         ▼
-                     ┌─────────────┐                          ┌──────────────┐
-                     │  FIPE API   │                          │  PostgreSQL  │
-                     │  (Marcas)   │                          │ (VehicleData)│
-                     └─────────────┘                          └──────────────┘
-                                                                      ▲
-                                                                      │
-                                                               ┌──────────────┐
-                                                               │  FIPE API    │
-                                                               │  (Modelos)   │
-                                                               └──────────────┘
-```
+Overview
+- The `Gateway` is an external service and must NOT access the `Processor` database directly.
+- All communication between Gateway and Processor uses Kafka (messaging).
+- There are two distinct flows: Command (initial-load) and DQL (query — request/reply).
 
-## 📝 Configuration
+1) Command Flow — Initial Load (high level steps)
+   1. Gateway authenticates the request with the User Service (REST/JWT).
+   2. Gateway publishes an initial-load command message to Kafka topic `commands.initial-load` (one message per brand). Message payload should include `brandCode`, `brandName` and `userCtx`.
+   3. Processor (Kafka consumer) receives the command message.
+   4. Processor fetches models from FIPE API (GET /carros/marcas/{brandId}/modelos).
+   5. Processor transforms and persists vehicle records into PostgreSQL (`fipe_processor` database).
+   6. Processor may optionally publish domain events (for example `events.vehicle-created`) to Kafka for downstream consumers.
 
-### Environment Variables
+2) DQL Flow — Query (request/reply) (high level steps)
+   1. Gateway receives a client query (HTTP) and authenticates it using User Service / JWT.
+   2. Gateway publishes a DQL request message to Kafka topic `dql.requests`. The message MUST include `correlationId` and a `replyTopic` (or follow a convention such as `dql.responses`) and can include `filters` and `userCtx`.
+   3. Processor (Kafka consumer) receives the DQL request and validates/authorizes using the provided `userCtx`.
+   4. Processor queries PostgreSQL (and/or Redis cache if configured) to produce the response payload.
+   5. Processor publishes the response message to the `replyTopic` with the same `correlationId` and the response payload.
+   6. Gateway consumes the response message from the reply topic and returns the result to the end user.
 
-**Gateway**:
-- `QUARKUS_HTTP_PORT`: HTTP port (default: 8080)
-- `QUARKUS_DATASOURCE_JDBC_URL`: Database URL
-- `KAFKA_BOOTSTRAP_SERVERS`: Kafka brokers
-- `QUARKUS_REDIS_HOSTS`: Redis connection
-- `QUARKUS_REST_CLIENT_FIPE_API_URL`: FIPE API URL
+Topics (recommended)
+- `commands.initial-load` — initial-load command messages (one per brand).
+- `events.vehicle-created` — optional domain events emitted after persistence.
+- `dql.requests` — query/request messages from Gateway.
+- `dql.responses` — response messages published by Processor (or per-request replyTopic).
 
-**Processor**:
-- `QUARKUS_HTTP_PORT`: HTTP port (default: 8081)
-- `QUARKUS_DATASOURCE_JDBC_URL`: Database URL
-- `KAFKA_BOOTSTRAP_SERVERS`: Kafka brokers
-- `QUARKUS_REST_CLIENT_FIPE_API_URL`: FIPE API URL
+Minimal message examples
+- Initial-load command:
+  {
+    "brandCode": "1",
+    "brandName": "Fiat",
+    "userCtx": { "userId": "...", "roles": ["ADMIN"] }
+  }
 
-## 🐛 Troubleshooting
+- DQL request:
+  {
+    "brandCode": "1",
+    "filters": { "model": "Palio" },
+    "correlationId": "uuid-1234",
+    "replyTopic": "dql.responses",
+    "userCtx": { "userId": "...", "roles": ["USER"] }
+  }
 
-### Kafka Connection Issues
-```powershell
-# Check Kafka status
-docker-compose ps kafka
+- DQL response:
+  {
+    "correlationId": "uuid-1234",
+    "payload": { "vehicles": [ /* ... */ ] }
+  }
 
-# View Kafka logs
-docker-compose logs kafka
-
-# Restart Kafka
-docker-compose restart kafka
-```
-
-### Database Connection Issues
-```powershell
-# Check PostgreSQL status
-docker-compose ps postgres
-
-# Connect to database
-docker exec -it postgres psql -U fipe -d fipe_processor
-
-# Check if databases exist
-docker exec -it postgres psql -U fipe -c "\l"
-```
-
-### Service Not Starting
-```powershell
-# Check service logs
-docker-compose logs gateway
-docker-compose logs processor
-
-# Rebuild services
-docker-compose build --no-cache
-docker-compose up -d
-```
-
-## ⚙️ Configuration
-
-Both services use YAML configuration format (`application.yml`) instead of properties files for better readability and structure.
-
-Database schema changes are managed through Liquibase migrations located in `src/main/resources/db/changelog/`. This ensures version-controlled, trackable database evolution across environments.
-
-## 📚 Additional Resources
-
-- [Quarkus Documentation](https://quarkus.io/guides/)
-- [FIPE API Documentation](https://deividfortuna.github.io/fipe/)
-- [Liquibase Documentation](https://docs.liquibase.com/)
-- [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-
-## 👥 Contributing
-
-1. Follow the existing architecture and patterns
-2. Write tests for new features
-3. Update documentation
-4. Follow clean code principles
-5. Keep commits atomic and descriptive
-
-## 📄 License
-
-This project is for educational purposes.
+Notes
+- Gateway must never directly access the Processor database or cache; it acts as an external messaging client.
+- Processor is responsible for authorization checks when messages include `userCtx`.
